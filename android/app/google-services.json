@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "904516436073",
+    "project_id": "lachagarden",
+    "storage_bucket": "lachagarden.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:904516436073:android:f786e5a41129735b6c62f8",
+        "android_client_info": {
+          "package_name": "com.example.garden_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "904516436073-fno6cm7vsv6jbegnu459mikgdfhindl4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN2Km2ygU1x7oA2JYt6XauAiP5p-FZbpo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "904516436073-fno6cm7vsv6jbegnu459mikgdfhindl4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
