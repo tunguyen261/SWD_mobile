@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../auth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,7 +13,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String? errorMessage = '';
   bool isLogin = true;
-
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  bool _isLoggedIn = false;
+  late GoogleSignInAccount _userObj;
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
@@ -43,12 +46,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _title() {
-    return const Text('Firebase Auth');
+    return const Text('LachaGarden');
   }
+
   Widget _entryField(
-      String title,
-      TextEditingController controller,
-      ) {
+    String title,
+    TextEditingController controller,
+  ) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -64,10 +68,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget _submitButton() {
     return ElevatedButton(
       onPressed:
-      isLogin ? signInWithEmailAndPassword : createUserWithEmailAndPassword,
+          isLogin ? signInWithEmailAndPassword : createUserWithEmailAndPassword,
       child: Text(isLogin ? 'Login' : 'Register'),
     );
   }
+
   Widget _loginOrRegisterButton() {
     return TextButton(
       onPressed: () {
@@ -82,25 +87,56 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: _title(),
-    ),
-    body: Container(
-    height: double.infinity,
-    width: double.infinity,
-    padding: const EdgeInsets.all(20),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-    _entryField('email', _controllerEmail),
-    _entryField('password', _controllerPassword),
-    _errorMessage(),
-    _submitButton(),
-    _loginOrRegisterButton(),
-    ],
-    ),
-    ),
+      ),
+      body: Container(
+        child: _isLoggedIn
+            ? Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.network(_userObj.photoUrl!),
+              const SizedBox(height: 20,),
+              Text(_userObj.displayName!),
+              const SizedBox(height: 20,),
+              Text(_userObj.email),
+              const SizedBox(height: 20,),
+              MaterialButton(
+                onPressed: () {
+                  _googleSignIn.signOut().then((value) {
+                    setState(() {
+                      _isLoggedIn = false;
+                    });
+                  }).catchError((e) {});
+                },
+                height: 50,
+                minWidth: 100,
+                color: Colors.red,
+                child: const Text('Logout',style: TextStyle(color: Colors.white),),
+              )
+            ],
+          ),
+        ) : Center(
+            child: MaterialButton(
+              onPressed: () {
+                _googleSignIn.signIn().then((userData) {
+                  setState(() {
+                    _isLoggedIn = true;
+                    _userObj = userData!;
+                  });
+                }).catchError((e) {
+                  print(e);
+                });
+              },
+              height: 50,
+              minWidth: 100,
+              color: Colors.red,
+              child: const Text('Google Signin',style: TextStyle(color: Colors.white),),
+            )
+        ),
+      ),
     );
   }
 }
