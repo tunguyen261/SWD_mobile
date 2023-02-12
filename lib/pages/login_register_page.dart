@@ -36,7 +36,6 @@ class _LoginPageState extends State<LoginPage> {
 
                 )),
             TextButton(
-
                 onPressed: () {
                   AuthService().signInWithGoogle();
                 },
