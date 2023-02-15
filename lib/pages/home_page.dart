@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
 
                 ),
               ),
-            const SizedBox(height: 32,),
+            const SizedBox(height: 10,),
 
             MaterialButton(
               padding: const EdgeInsets.all(10),
@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.black87),
             ),
             const SizedBox(
-              height: 30,
+              height: 10,
             ),
             MaterialButton(
               padding: const EdgeInsets.all(10),
@@ -114,6 +114,31 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Cart',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_repair_service_outlined),
+            label: 'Service',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            label: 'Profile',
+          ),
+        ],
+        //currentIndex: _selectedIndex,
+        selectedItemColor: Colors.green[500],
+        unselectedItemColor: Colors.black,
+        //onTap: _onItemTapped,
       ),
     );
 
