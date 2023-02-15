@@ -24,13 +24,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future uploadFile() async{
+  Future uploadFile() async {
     final path = 'filesMB/${pickedFile!.name}';
     final file = File(pickedFile!.path!);
     final ref = FirebaseStorage.instance.ref().child(path);
     ref.putFile(file);
     final snapshot = await uploadTask!.whenComplete(() {});
-    final urlDownload= await snapshot.ref.getDownloadURL();
+    final urlDownload = await snapshot.ref.getDownloadURL();
     print('Download Link: $urlDownload');
   }
 
@@ -50,11 +50,11 @@ class _HomePageState extends State<HomePage> {
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
-
                 ),
               ),
-            const SizedBox(height: 10,),
-
+            const SizedBox(
+              height: 10,
+            ),
             MaterialButton(
               padding: const EdgeInsets.all(10),
               color: Colors.green,
@@ -66,8 +66,9 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
             ),
-            const SizedBox(height: 32,),
-
+            const SizedBox(
+              height: 32,
+            ),
             MaterialButton(
               padding: const EdgeInsets.all(10),
               color: Colors.green,
@@ -125,7 +126,6 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.shopping_cart),
             label: 'Cart',
           ),
-
           BottomNavigationBarItem(
             icon: Icon(Icons.home_repair_service_outlined),
             label: 'Service',
@@ -141,7 +141,5 @@ class _HomePageState extends State<HomePage> {
         //onTap: _onItemTapped,
       ),
     );
-
   }
-
 }

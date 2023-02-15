@@ -6,7 +6,7 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-   _LoginPageState createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -24,23 +24,25 @@ class _LoginPageState extends State<LoginPage> {
         width: size.width,
         height: size.height,
         padding: EdgeInsets.only(
-            left: 20, right: 20, top: size.height * 0.2, bottom: size.height * 0.5),
+            left: 20,
+            right: 20,
+            top: size.height * 0.2,
+            bottom: size.height * 0.5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text("Hello \nWelcome to LaChaGarden",
                 style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.green,
-
+                  fontSize: 30,
+                  color: Colors.green,
                 )),
             TextButton(
-                onPressed: () {
-                  AuthService().signInWithGoogle();
-                },
-                child: Text('Login with Gooogle'),
-                //child: const Image(width: 100, image: AssetImage('assets/google.png'))
+              onPressed: () {
+                AuthService().signInWithGoogle();
+              },
+              child: Text('Login with Gooogle'),
+              //child: const Image(width: 100, image: AssetImage('assets/google.png'))
             ),
           ],
         ),
