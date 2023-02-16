@@ -36,6 +36,8 @@ class _HomePageState extends State<HomePage> {
     print('Download Link: $urlDownload');
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +45,8 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 10,),
+            Dialog(),
             if (pickedFile != null)
               Expanded(
                 child: Container(
