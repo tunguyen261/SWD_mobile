@@ -4,7 +4,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:garden_app/ForGroundLocalNotification.dart';
 import 'package:garden_app/auth_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -17,6 +16,32 @@ class _HomePageState extends State<HomePage> {
   //String? user = FirebaseAuth.instance.currentUser!.email ?? FirebaseAuth.instance.currentUser!.displayName;
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  @override
+  void initState() {
+    super.initState();
+    setupFirebaseMessaging(context);
+  }
+  void setupFirebaseMessaging(BuildContext context) {
+    messaging.requestPermission();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(message.notification?.title ?? 'New Notification'),
+          content: Text(message.notification?.body ?? 'Body'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
 
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
@@ -46,7 +71,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 10,),
-            Dialog(),
+
             if (pickedFile != null)
               Expanded(
                 child: Container(
@@ -68,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(5)),
               onPressed: selectFile,
               child: const Text(
-                'Choose file..',
+                'Choose file.. ',
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
             ),
@@ -149,3 +174,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
