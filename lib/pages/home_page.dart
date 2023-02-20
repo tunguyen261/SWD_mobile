@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     setupFirebaseMessaging(context);
   }
+
   void setupFirebaseMessaging(BuildContext context) {
     messaging.requestPermission();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -42,7 +43,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
   Future selectFile() async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
@@ -61,8 +61,6 @@ class _HomePageState extends State<HomePage> {
     print('Download Link: $urlDownload');
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,8 +68,9 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 10,),
-
+            const SizedBox(
+              height: 10,
+            ),
             if (pickedFile != null)
               Expanded(
                 child: Container(
@@ -174,4 +173,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
