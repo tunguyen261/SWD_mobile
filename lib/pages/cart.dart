@@ -6,6 +6,8 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cart'),
+        centerTitle: true,
+        backgroundColor: Colors.green,
       ),
       body: ListView(
         children: [
@@ -105,7 +107,7 @@ class CartPage extends StatelessWidget {
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border(
-            top: BorderSide(width: 1, color:Colors.black38),
+            top: BorderSide(width: 1, color: Colors.black38),
           ),
         ),
         child: Row(

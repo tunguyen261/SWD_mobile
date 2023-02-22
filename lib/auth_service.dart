@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:garden_app/pages/home_page.dart';
 import 'package:garden_app/pages/login_register_page.dart';
+import 'package:garden_app/pages/main_page.dart';
+import 'package:garden_app/pages/profile.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
@@ -10,7 +12,7 @@ class AuthService {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
-            return HomePage();
+            return const MainPage();
           } else {
             return const LoginPage();
           }
