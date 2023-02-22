@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/auth_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:garden_app/widgets/bottomNavigation.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -64,12 +65,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("LachaGaden"),
+        backgroundColor: Colors.green,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(
-              height: 10,
+              height: 40,
             ),
             if (pickedFile != null)
               Expanded(
@@ -77,7 +82,8 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.blue[100],
                   child: Image.file(
                     File(pickedFile!.path!),
-                    width: double.infinity,
+                    height: 100,
+                    width: 200,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -97,7 +103,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(
-              height: 32,
+              height: 10,
             ),
             MaterialButton(
               padding: const EdgeInsets.all(10),
@@ -110,18 +116,18 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(color: Colors.white, fontSize: 15),
               ),
             ),
-            Text(
-              FirebaseAuth.instance.currentUser!.displayName!,
-              style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87),
-            ),
+            // Text(
+            //   FirebaseAuth.instance.currentUser!.displayName!,
+            //   style: const TextStyle(
+            //       fontSize: 30,
+            //       fontWeight: FontWeight.bold,
+            //       color: Colors.black87),
+            // ),
             const SizedBox(
               height: 10,
             ),
             Text(
-              FirebaseAuth.instance.currentUser!.email!,
+              "User: "+FirebaseAuth.instance.currentUser!.email!,
               style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -146,30 +152,8 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_repair_service_outlined),
-            label: 'Service',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
-          ),
-        ],
-        //currentIndex: _selectedIndex,
-        selectedItemColor: Colors.green[500],
-        unselectedItemColor: Colors.black,
-        //onTap: _onItemTapped,
-      ),
+
+      //bottomNavigationBar: bottomNavigation(),
     );
   }
 }
