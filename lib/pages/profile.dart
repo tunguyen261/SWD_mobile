@@ -66,11 +66,11 @@ class ProfilePage extends StatelessWidget {
             if (pickedFile != null)
               Expanded(
                 child: Container(
-                  color: Colors.blue[100],
+                  color: Colors.blue[50],
                   child: Image.file(
                     File(pickedFile!.path!),
                     height: 100,
-                    width: 200,
+                    width: double.infinity,
                     fit: BoxFit.cover,
                   ),
                 ),
