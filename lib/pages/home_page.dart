@@ -1,131 +1,185 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:garden_app/pages/ProductScreen.dart';
+import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:garden_app/consts/global_colors.dart';
+import 'package:garden_app/pages/categories_screen.dart';
+import 'package:garden_app/pages/feeds_screen.dart';
+import 'package:garden_app/services/api_handler.dart';
 
-class HomePage extends StatelessWidget {
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  void setupFirebaseMessaging(BuildContext context) {
-    messaging.requestPermission();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(message.notification?.title ?? 'New Notification'),
-          content: Text(message.notification?.body ?? 'Body'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    });
+import '../models/products_model.dart';
+import '../widgets/appbar_icons.dart';
+import '../widgets/feeds_grid.dart';
+import '../widgets/sale_widget.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late TextEditingController _textEditingController;
+
+  // List<ProductsModel> productsList = [];
+  @override
+  void initState() {
+    _textEditingController = TextEditingController();
+    super.initState();
   }
 
-  final List<Map<String, dynamic>> products = [
-    {
-      'id': 'p1',
-      'title': 'Garden modern',
-      'description': 'Description of product 1',
-      'price': 9.99,
-      'imageUrl':
-          'https://assets-news.housing.com/news/wp-content/uploads/2022/03/16150728/SMALL-BALCONY-GARDEN-FEATURE-compressed.jpg',
-    },
-    {
-      'id': 'p2',
-      'title': 'Garden classical',
-      'description': 'Description of product 2',
-      'price': 19.99,
-      'imageUrl':
-          'https://assets-news.housing.com/news/wp-content/uploads/2022/03/16150736/balcony-garden-7.png',
-    },
-    {
-      'id': 'p3',
-      'title': 'Garden modern 2',
-      'description': 'Description of product 3',
-      'price': 29.99,
-      'imageUrl':
-          'https://assets-news.housing.com/news/wp-content/uploads/2022/03/16150756/balcony-garden-10.png',
-    },
-  ];
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("LachaGaden"),
-        backgroundColor: Colors.green,
-      ),
-      body: ListView.builder(
-        itemCount: products.length,
-        itemBuilder: (ctx, i) => Card(
-          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 200,
-                width: double.infinity,
-                child: Image.network(
-                  products[i]['imageUrl'],
-                  fit: BoxFit.cover,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                products[i]['title'],
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Text(
-                    '\$${products[i]['price'].toStringAsFixed(2)}',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+    Size size = MediaQuery.of(context).size;
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+          appBar: AppBar(
+            // elevation: 4,
+            title: const Text('Cool Store'),
+            leading: AppBarIcons(
+              function: () {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.fade,
+                    child: const CategoriesScreen(),
                   ),
-                  SizedBox.fromSize(
-                    size: Size(40, 40),
-                    child: ClipOval(
-                      child: Material(
-                        color: Colors.green,
-                        child: InkWell(
-                          splashColor: Colors.amberAccent,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ProductDetailPage(
-                                    title: products[i]['title'],
-                                    imageUrl: products[i]['imageUrl'],
-                                    description: products[i]['description'],
-                                    price: products[i]['price']),
-                              ),
-                            );
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(Icons.shopping_cart_outlined),
-                              // <-- Icon
-                            ],
-                          ),
+                );
+              },
+
+              icon: Icons.category,
+
+            ),
+            // actions: [
+            //   AppBarIcons(
+            //     function: () {
+            //       Navigator.push(
+            //         context,
+            //         PageTransition(
+            //           type: PageTransitionType.fade,
+            //           child: const UsersScreen(),
+            //         ),
+            //       );
+            //     },
+            //     icon: IconlyBold.user3,
+            //   ),
+            // ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 18,
+                ),
+                TextField(
+                  controller: _textEditingController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                      hintText: "Search products",
+                      filled: true,
+                      fillColor: Theme.of(context).cardColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(
+                          color: Theme.of(context).cardColor,
                         ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                      ),
+                      suffixIcon: Icon(
+                        IconlyLight.search,
+                        color: lightIconsColor,
+                      )),
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(children: [
+                      SizedBox(
+                        height: size.height * 0.25,
+                        child: Swiper(
+                          itemCount: 3,
+                          itemBuilder: (ctx, index) {
+                            return const SaleWidget();
+                          },
+                          autoplay: true,
+                          pagination: const SwiperPagination(
+                              alignment: Alignment.bottomCenter,
+                              builder: DotSwiperPaginationBuilder(
+                                  color: Colors.white,
+                                  activeColor: Colors.red)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "Latest Products",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                              ),
+                            ),
+                            const Spacer(),
+                            AppBarIcons(
+                                function: () {
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                          type: PageTransitionType.fade,
+                                          child: const FeedsScreen())
+                                  );
+                                },
+                                icon: IconlyBold.arrowRight2),
+                          ],
+                        ),
+                      ),
+                      FutureBuilder<List<ProductsModel>>(
+                        future: APIHandler.getAllProducts(limit: "6"),
+                        builder: ((context, snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.none:
+                            case ConnectionState.waiting:
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            case ConnectionState.active:
+                            case ConnectionState.done:
+                              if (snapshot.hasError) {
+                                return Text(
+                                    "An error occurred ${snapshot.error}");
+                              } else {
+                                return FeedsGridWidget(
+                                    productsList: snapshot.data!);
+                              }
+                          }
+                        }),
+                      )
+                    ]),
+                  ),
+                )
+              ],
+            ),
+          )),
     );
   }
 }
