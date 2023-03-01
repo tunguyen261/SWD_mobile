@@ -45,9 +45,11 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
           appBar: AppBar(
             // elevation: 4,
-            title: const Text('Cool Store'),
-            leading: AppBarIcons(
-              function: () {
+            title: const Text('LaChaGarden Store'),
+            centerTitle: true,
+            backgroundColor: Colors.green,
+            leading: IconButton(
+              onPressed: () {
                 Navigator.push(
                   context,
                   PageTransition(
@@ -56,9 +58,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               },
-
-              icon: Icons.category,
-
+              icon: const Icon(Icons.calendar_view_month_sharp),
             ),
             // actions: [
             //   AppBarIcons(
