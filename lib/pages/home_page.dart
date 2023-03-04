@@ -58,7 +58,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               },
-              icon: const Icon(Icons.calendar_view_month_sharp),
+              icon: const Icon(
+                  Icons.category_sharp,
+                  color: Colors.green,
+              ),
             ),
             // actions: [
             //   AppBarIcons(

@@ -39,6 +39,7 @@ dependencies:
   firebase_core: ^2.4.1
   firebase_auth: ^4.2.5
   file_picker: ^5.2.5
+  image_picker: ^0.8.6+4
   provider: ^6.0.5
   google_sign_in: ^5.4.2
   firebase_storage: ^11.0.11
@@ -46,6 +47,7 @@ dependencies:
   flutter_local_notifications: ^13.0.0
   flutter_iconly: ^1.0.2
   card_swiper: ^2.0.4
+  get: ^4.6.5
   fancy_shimmer_image: ^2.0.2
   page_transition: ^2.0.9
   shared_preferences: 2.0.18
@@ -74,7 +76,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/images/logo1.jpg
+    - assets/images/
+    - assets/images/empty_cart.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

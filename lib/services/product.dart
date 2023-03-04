@@ -1,6 +1,10 @@
 import 'dart:convert';
 
+import 'package:garden_app/models/products_model.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+
+
 
 Future<Album> fetchAlbum() async {
   final response = await http
@@ -34,5 +38,40 @@ class Album {
       id: json['id'],
       title: json['title'],
     );
+  }
+
+}
+extension IterableExtension<T> on Iterable<T> {
+  Iterable<T> distinctBy(Object Function(T e) getCompareValue) {
+    var result = <T>[];
+    forEach((element) {
+      if (!result.any((x) => getCompareValue(x) == getCompareValue(element))) {
+        result.add(element);
+      }
+    });
+    return result;
+  }
+
+  Iterable<E> mapWithIndex<E>(E Function(int index, T value) f) {
+    return Iterable.generate(length).map((i) => f(i, elementAt(i)));
+  }
+}
+
+
+class ProductController extends GetxController{
+  RxList<ProductsModel> cartProducts = <ProductsModel>[].obs;
+  RxInt totalPrice = 0.obs;
+  bool get isEmptyCart => cartProducts.isEmpty;
+  void calculateTotalPrice() {
+    totalPrice.value = 0;
+    for (var element in cartProducts) {
+      totalPrice.value += element.price!;
+    }
+  }
+  void addToCart(ProductsModel product) {
+    //product.quantity++;
+    cartProducts.add(product);
+    cartProducts.assignAll(cartProducts.distinctBy((item) => item));
+    calculateTotalPrice();
   }
 }

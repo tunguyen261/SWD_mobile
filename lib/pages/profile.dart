@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -56,82 +56,209 @@ class ProfilePage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.green,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 40,
-            ),
-            if (pickedFile != null)
-              Expanded(
-                child: Container(
-                  color: Colors.blue[50],
-                  child: Image.file(
-                    File(pickedFile!.path!),
-                    height: 100,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+
+                Stack(
+                  children: [
+
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.grey.shade200,
+                      child:
+
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0.2,
+                      right: 1,
+                      child: Container(
+                        child: Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child:
+                          IconButton(
+                            icon: Icon(Icons.camera_alt),
+                              highlightColor: Colors.lightGreen,
+                              color: Colors.black,
+                            onPressed: ()  {
+                              selectFile(context);
+
+                            },
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 3,
+                              color: Colors.white,
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(
+                                50,
+                              ),
+                            ),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                offset: Offset(2, 4),
+                                color: Colors.black.withOpacity(
+                                  0.3,
+                                ),
+                                blurRadius: 3,
+                              ),
+                            ]),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            const SizedBox(
-              height: 10,
+                const SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+
+                      FirebaseAuth.instance.currentUser!.displayName!,
+                      style:
+                      TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      FirebaseAuth.instance.currentUser!.email!,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 8,),
+                    IconButton(
+                      icon: Icon(Icons.camera_alt),
+                      onPressed: ()  {
+                        selectFile(context);
+                        if (pickedFile != null) {
+                          // TODO: Save the new image file
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
-            MaterialButton(
-              padding: const EdgeInsets.all(10),
-              color: Colors.green,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-              onPressed: () => selectFile(context),
-              child: const Text(
-                'Choose file.. ',
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
+          ),
+          const Divider(height: 1),
+          Expanded(
+            child: ListView(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.account_circle),
+                  title: const Text('Edit Profile'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {},
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text('Settings'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {},
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.help),
+                  title: const Text('Help & Support'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {},
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.exit_to_app),
+                  title: const Text('Logout'),
+                  onTap: () {AuthService().signOut();},
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            MaterialButton(
-              padding: const EdgeInsets.all(10),
-              color: Colors.green,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-              onPressed: uploadFile,
-              child: const Text(
-                'Upload',
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              "User: " + FirebaseAuth.instance.currentUser!.email!,
-              style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            MaterialButton(
-              padding: const EdgeInsets.all(10),
-              color: Colors.green,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)),
-              child: const Text(
-                'LOG OUT',
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-              onPressed: () {
-                AuthService().signOut();
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
+      // body: Center(
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       const SizedBox(
+      //         height: 40,
+      //       ),
+      //       if (pickedFile != null)
+      //         Expanded(
+      //           child: Container(
+      //             color: Colors.blue[50],
+      //             child: Image.file(
+      //               File(pickedFile!.path!),
+      //               height: 100,
+      //               width: double.infinity,
+      //               fit: BoxFit.cover,
+      //             ),
+      //           ),
+      //         ),
+      //       const SizedBox(
+      //         height: 10,
+      //       ),
+      //       MaterialButton(
+      //         padding: const EdgeInsets.all(10),
+      //         color: Colors.green,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(5)),
+      //         onPressed: () => selectFile(context),
+      //         child: const Text(
+      //           'Choose file.. ',
+      //           style: TextStyle(color: Colors.white, fontSize: 15),
+      //         ),
+      //       ),
+      //       const SizedBox(
+      //         height: 10,
+      //       ),
+      //       MaterialButton(
+      //         padding: const EdgeInsets.all(10),
+      //         color: Colors.green,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(5)),
+      //         onPressed: uploadFile,
+      //         child: const Text(
+      //           'Upload',
+      //           style: TextStyle(color: Colors.white, fontSize: 15),
+      //         ),
+      //       ),
+      //       const SizedBox(
+      //         height: 10,
+      //       ),
+      //       Text(
+      //         "User: " + FirebaseAuth.instance.currentUser!.email!,
+      //         style: const TextStyle(
+      //             fontSize: 20,
+      //             fontWeight: FontWeight.bold,
+      //             color: Colors.black87),
+      //       ),
+      //       const SizedBox(
+      //         height: 10,
+      //       ),
+      //       MaterialButton(
+      //         padding: const EdgeInsets.all(10),
+      //         color: Colors.green,
+      //         shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(5)),
+      //         child: const Text(
+      //           'LOG OUT',
+      //           style: TextStyle(color: Colors.white, fontSize: 15),
+      //         ),
+      //         onPressed: () {
+      //           AuthService().signOut();
+      //         },
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

@@ -1,11 +1,13 @@
 import 'dart:developer';
+import 'package:get/get.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/products_model.dart';
 import 'package:garden_app/services/api_handler.dart';
+import 'package:garden_app/services/product.dart';
 import '../consts/global_colors.dart';
-
+final ProductController controller = Get.put(ProductController());
 class ProductDetails extends StatefulWidget {
   const ProductDetails({
     Key? key,
@@ -70,9 +72,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      productsModel!.category!.name.toString(),
+                      ("Category: ${productsModel!.category!.name.toString()}"),
                       style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w500),
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.lightGreen,// added background color
+
+                      ),
                     ),
                     const SizedBox(
                       height: 18,
@@ -97,7 +103,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 style: const TextStyle(
                                     fontSize: 25,
                                     color: Color.fromRGBO(
-                                        33, 150, 243, 1)),
+                                        241, 190, 23, 1.0)),
                                 children: <TextSpan>[
                                   TextSpan(
                                       text: productsModel!.price
@@ -158,6 +164,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                       textAlign: TextAlign.start,
                       style: const TextStyle(fontSize: 25),
                     ),
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => controller.addToCart(productsModel!),
+                        child: const Text("Add to cart"),
+                      ),
+                    )
                   ],
                 ),
               ),
