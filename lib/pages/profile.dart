@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:garden_app/pages/edit_profile.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/auth_service.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ProfilePage extends StatelessWidget {
   PlatformFile? pickedFile;
@@ -64,59 +66,9 @@ class ProfilePage extends StatelessWidget {
             child: Row(
               children: [
 
-                Stack(
-                  children: [
-
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey.shade200,
-                      child:
-
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0.2,
-                      right: 1,
-                      child: Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child:
-                          IconButton(
-                            icon: Icon(Icons.camera_alt),
-                              highlightColor: Colors.lightGreen,
-                              color: Colors.black,
-                            onPressed: ()  {
-                              selectFile(context);
-
-                            },
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 3,
-                              color: Colors.white,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                50,
-                              ),
-                            ),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                offset: Offset(2, 4),
-                                color: Colors.black.withOpacity(
-                                  0.3,
-                                ),
-                                blurRadius: 3,
-                              ),
-                            ]),
-                      ),
-                    ),
-                  ],
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
                 ),
                 const SizedBox(width: 16),
                 Column(
@@ -156,7 +108,15 @@ class ProfilePage extends StatelessWidget {
                   leading: const Icon(Icons.account_circle),
                   title: const Text('Edit Profile'),
                   trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        child:  EditProfilePage(),
+                      ),
+                    );
+                  },
                 ),
                 const Divider(height: 1),
                 ListTile(
@@ -176,7 +136,9 @@ class ProfilePage extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.exit_to_app),
                   title: const Text('Logout'),
-                  onTap: () {AuthService().signOut();},
+                  onTap: () {
+                    AuthService().signOut();
+                  },
                 ),
               ],
             ),
