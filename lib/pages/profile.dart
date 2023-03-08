@@ -75,7 +75,6 @@ class ProfilePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-
                       FirebaseAuth.instance.currentUser!.displayName!,
                       style:
                       TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
