@@ -9,6 +9,8 @@ import '../models/user_model.dart';
 
 
 class EditProfilePage extends StatefulWidget {
+
+  const EditProfilePage({Key? key}) : super(key: key);
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
 }
@@ -30,15 +32,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> _getUserProfile() async {
     final User? user = FirebaseAuth.instance!.currentUser!;
     final DocumentSnapshot userProfileDoc =
+
     await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
     setState(() {
       _user = UserProfile(
         uid: user.uid,
-        displayName: (userProfileDoc.data() as Map<String,
-            String>?)?['displayName'] ?? '',
+        displayName: user.displayName!,
         email: user.email!,
-        photoUrl: (userProfileDoc.data() as Map<String,
-            String>?)?['photoUrl'] ?? '',
+        photoUrl: user.photoURL!
       );
     });
   }
@@ -85,16 +86,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () => _pickImage(),
-                    child: CircleAvatar(
-                      radius: 80,
-                      backgroundImage: _image != null
-                          ? FileImage(_image)!
-                          : NetworkImage(_user.photoUrl)! as ImageProvider<Object>?,
-
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () => _pickImage(),
+                  //   child: CircleAvatar(
+                  //     radius: 80,
+                  //     backgroundImage: _image != null
+                  //         ? FileImage(_image)!
+                  //         : NetworkImage(_user.photoUrl)! as ImageProvider<Object>?,
+                  //
+                  //   ),
+                  // ),
                   SizedBox(height: 20),
                   Text(_user.email, style: TextStyle(fontSize: 20)),
                   SizedBox(height: 20),

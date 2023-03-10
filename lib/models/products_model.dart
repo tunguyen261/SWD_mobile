@@ -7,7 +7,7 @@ class ProductsModel with ChangeNotifier {
   int? price;
   String? description;
   CategoriesModel? category;
-  List<String>? images;
+  String? images;
 
   ProductsModel(
       {this.id,
@@ -19,13 +19,13 @@ class ProductsModel with ChangeNotifier {
 
   ProductsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    title = json['title'];
+    title = json['namePack'];
     price = json['price'];
     description = json['description'];
     category = json['category'] != null
         ? CategoriesModel.fromJson(json['category'])
         : null;
-    images = json['images'].cast<String>();
+    images = json['image'];
   }
   static List<ProductsModel> productsFromSnapshot(List productSnapshot) {
     return productSnapshot.map((data) {

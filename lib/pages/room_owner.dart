@@ -1,60 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:garden_app/models/room_model.dart';
+import 'package:garden_app/services/api_handler.dart';
+import 'package:garden_app/widgets/room_widget.dart';
 import 'package:provider/provider.dart';
-import '../models/products_model.dart';
-import '../services/api_handler.dart';
-import '../widgets/feeds_widget.dart';
 
-class FeedsScreen extends StatefulWidget {
-  const FeedsScreen({Key? key}) : super(key: key);
+class RoomOwnerPage extends StatefulWidget {
+  const RoomOwnerPage({Key? key}) : super(key: key);
 
   @override
-  State<FeedsScreen> createState() => _FeedsScreenState();
+  State<RoomOwnerPage> createState() => _RoomOwnerPageState();
 }
 
-class _FeedsScreenState extends State<FeedsScreen> {
-  final ScrollController _scrollController = ScrollController();
-  List<ProductsModel> productsList = [];
+class _RoomOwnerPageState extends State<RoomOwnerPage> {
+
+  final ScrollController _scrollController= ScrollController();
+  List<Room> roomList = [];
   int limit = 10;
-  bool _isLoading = false;
+  bool _isLoading=false;
+
+  Future<void> getRooms() async{
+    roomList = await APIHandler.getAllRooms(limit: limit.toString());
+    setState(() {
+
+    });
+  }
   @override
-  void initState() {
-    getProducts();
+  void initState(){
+    getRooms();
     super.initState();
   }
-
   @override
   void didChangeDependencies() {
-     getProducts();
+     getRooms();
     _scrollController.addListener(() async {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         _isLoading = true;
         print("_isLoading $_isLoading");
         limit += 10;
-        await getProducts();
+        await getRooms();
         _isLoading = false;
         print("limit $limit");
       }
     });
     super.didChangeDependencies();
   }
-
-  Future<void> getProducts() async {
-    productsList = await APIHandler.getAllProducts(
-      limit: limit.toString(),
-    );
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         // elevation: 4,
-        title: const Text('All Products'),
+        title: const Text('All Rooms'),
         backgroundColor: Colors.lightGreen ,
       ),
-      body: productsList.isEmpty
+      body: roomList.isEmpty
           ? const Center(
         child: CircularProgressIndicator(),
       )
@@ -65,7 +64,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
             GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: productsList.length,
+                itemCount: roomList.length,
                 gridDelegate:
                 const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -74,8 +73,8 @@ class _FeedsScreenState extends State<FeedsScreen> {
                     childAspectRatio: 0.6),
                 itemBuilder: (ctx, index) {
                   return ChangeNotifierProvider.value(
-                      value: productsList[index],
-                      child: const FeedsWidget());
+                      value: roomList[index],
+                      child: const RoomsWidget());
                 }),
             if (_isLoading)
               const Center(child: CircularProgressIndicator()),

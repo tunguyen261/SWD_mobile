@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                   controller: _textEditingController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
-                      hintText: "Search products",
+                      hintText: "Search Garden",
                       filled: true,
                       fillColor: Theme.of(context).cardColor,
                       enabledBorder: OutlineInputBorder(
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                         child: Row(
                           children: [
                             const Text(
-                              "Latest Products",
+                              "Latest Garden",
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18,

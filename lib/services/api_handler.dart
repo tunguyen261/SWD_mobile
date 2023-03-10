@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:garden_app/models/room_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:garden_app/consts/api_consts.dart';
 import 'package:garden_app/models/categories_model.dart';
@@ -12,8 +13,8 @@ class APIHandler {
     try {
       var uri = Uri.https(
           BASE_URL,
-          "api/v1/$target",
-          target == "products"
+          "api/$target",
+          target == "GardenPackage"
               ? {
             "offset": "0",
             "limit": limit,
@@ -37,11 +38,18 @@ class APIHandler {
       throw error.toString();
     }
   }
+  static Future<List<Room>> getAllRooms({required String limit}) async{
+    List temp = await getData(
+        target: "Room",
+        limit: limit,
+    );
+    return Room.productsFromSnapshot(temp);
+  }
 
   static Future<List<ProductsModel>> getAllProducts(
       {required String limit}) async {
     List temp = await getData(
-      target: "products",
+      target: "GardenPackage",
       limit: limit,
     );
     return ProductsModel.productsFromSnapshot(temp);
@@ -61,7 +69,7 @@ class APIHandler {
     try {
       var uri = Uri.https(
         BASE_URL,
-        "api/v1/products/$id",
+        "api/GardenPackage/$id",
       );
       var response = await http.get(uri);
 

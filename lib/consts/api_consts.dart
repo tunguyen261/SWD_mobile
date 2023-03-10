@@ -1,1 +1,1 @@
-const String BASE_URL = "api.escuelajs.co";
+const String BASE_URL = "lacha.s2tek.net";

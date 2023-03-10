@@ -52,7 +52,7 @@ class CartPage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(2),
                         child: Image.network(
-                          product.images![0],
+                          product.images!,
                           width: 100,
                           height: 90,
                         ),
@@ -150,8 +150,9 @@ class CartPage extends StatelessWidget {
         padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(20)),
-          onPressed: controller.isEmptyCart ? null : () {},
-          child: const Text("Buy Now"),
+          onPressed: controller.isEmptyCart ? null :
+              () {},
+          child: const Text("Booking Now"),
         ),
       ),
     );
@@ -167,7 +168,7 @@ class CartPage extends StatelessWidget {
           Expanded(
             child: !controller.isEmptyCart ? cartList() : const EmptyCart(),
           ),
-          bottomBarTitle(),
+          //bottomBarTitle(),
           bottomBarButton()
         ],
       ),

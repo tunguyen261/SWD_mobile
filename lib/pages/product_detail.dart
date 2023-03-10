@@ -71,15 +71,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      ("Category: ${productsModel!.category!.name.toString()}"),
-                      style: const TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.lightGreen,// added background color
-
-                      ),
-                    ),
+                    // Text(
+                    //   ("Category: ${productsModel!.category!.name.toString()}"),
+                    //   style: const TextStyle(
+                    //     fontSize: 24.0,
+                    //     fontWeight: FontWeight.bold,
+                    //     color: Colors.lightGreen,// added background color
+                    //
+                    //   ),
+                    // ),
                     const SizedBox(
                       height: 18,
                     ),
@@ -130,7 +130,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     return FancyShimmerImage(
                       width: double.infinity,
                       imageUrl:
-                      productsModel!.images![index].toString(),
+                      productsModel!.images!,
                       boxFit: BoxFit.fill,
                     );
                   },

@@ -141,7 +141,6 @@ class AuthService {
           'Authorization': 'Bearer $idToken',
         },
       );
-
       if (response.statusCode == 200) {
         print('Success!!!');
         return response.body;
