@@ -4,8 +4,6 @@ import 'package:garden_app/models/products_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-
-
 Future<Album> fetchAlbum() async {
   final response = await http
       .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
@@ -20,7 +18,6 @@ Future<Album> fetchAlbum() async {
     throw Exception('Failed to load album');
   }
 }
-
 class Album {
   final int userId;
   final int id;

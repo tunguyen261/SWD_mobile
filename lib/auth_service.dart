@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:garden_app/pages/login_register_page.dart';
 import 'package:garden_app/pages/main_page.dart';
@@ -34,12 +35,10 @@ class AuthService {
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
-
     );
-
-    print("tokenUS: ${googleAuth.idToken}");
+    print("TokenUS: ${googleAuth.idToken}");
     // Once signed in, return the UserCredential
-    makeAuthenticatedRequest();
+    makeAuthenticatedRequest(googleAuth.idToken.toString());
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -130,13 +129,32 @@ class AuthService {
     await googleSignIn.disconnect();
     FirebaseAuth.instance.signOut();
   }
-
+  Future<String> makeAuthServer(String idToken) async{
+    final String? idToken =await getAccessToken();
+    if(idToken!=null){
+      final response= await http.post(
+        Uri.parse("https://lacha.s2tek.net/api/CustomToken?token=$idToken"),
+        headers: {
+          'Authorization': 'Bearer $idToken',
+        },
+      );
+      if(response.statusCode == 200){
+        print("succes");
+        print("${response.body}");
+        return response.body;
+      } else {
+        throw Exception('Failed to fetch data');
+      }
+    } else {
+      throw Exception('Access token not found');
+    }
+  }
   // Make an authenticated API request
-  Future<String> makeAuthenticatedRequest() async {
+  Future<String> makeAuthenticatedRequest(String idToken) async {
     final String? idToken = await getAccessToken();
     if (idToken != null) {
       final response = await http.get(
-        Uri.parse('http://s2tek.net:7100/swagger/index.html?fbclid=IwAR2Ynh0yEfhgmyyWwT17NvMlLs37zXkH2CwYv-X7aStZLMQVTORAmVrAEgA'),
+        Uri.parse('https://lacha.s2tek.net/swagger/index.html'),
         headers: {
           'Authorization': 'Bearer $idToken',
         },

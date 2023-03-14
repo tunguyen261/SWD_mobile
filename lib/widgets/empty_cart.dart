@@ -12,8 +12,9 @@ class EmptyCart extends StatelessWidget {
         ),
         const Text(
           "Empty cart",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        )
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20 ),
+        ),
+        SizedBox(height: 15),
       ],
     );
   }

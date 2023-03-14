@@ -5,14 +5,13 @@ class Room with ChangeNotifier{
   String? roomNumber;
   int? status;
   int? buildingId;
-  int? customerId;
+  String? customerId;
 
   Room({this.id, this.roomNumber, this.status, this.buildingId, this.customerId});
 
   Room.fromJson(Map<String, dynamic> json) {
     id = json["id"];
     roomNumber = json["roomNumber"];
-
     status = json["status"];
     buildingId = json["buildingId"];
     customerId = json["customerId"];
@@ -22,7 +21,6 @@ class Room with ChangeNotifier{
     final Map<String, dynamic> _data = <String, dynamic>{};
     _data["id"] = id;
     _data["roomNumber"] = roomNumber;
-    
     _data["status"] = status;
     _data["buildingId"] = buildingId;
     _data["customerId"] = customerId;

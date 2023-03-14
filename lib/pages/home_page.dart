@@ -1,4 +1,5 @@
 import 'package:card_swiper/card_swiper.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:page_transition/page_transition.dart';
@@ -21,14 +22,31 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late TextEditingController _textEditingController;
-
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
   // List<ProductsModel> productsList = [];
   @override
   void initState() {
     _textEditingController = TextEditingController();
     super.initState();
   }
-
+  void setupFirebaseMessaging(BuildContext context) {
+    messaging.requestPermission();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(message.notification?.title ?? 'New Notification'),
+          content: Text(message.notification?.body ?? 'Body'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    });
+  }
   @override
   void dispose() {
     _textEditingController.dispose();
