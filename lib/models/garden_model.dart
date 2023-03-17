@@ -6,7 +6,13 @@ class GardenModel {
   int? roomId;
   List<dynamic>? requests;
 
-  GardenModel({this.id, this.status, this.gardenPackageId, this.dateTime, this.roomId, this.requests});
+  GardenModel(
+      {this.id,
+      this.status,
+      this.gardenPackageId,
+      this.dateTime,
+      this.roomId,
+      this.requests});
 
   GardenModel.fromJson(Map<String, dynamic> json) {
     id = json["id"];
@@ -24,7 +30,7 @@ class GardenModel {
     _data["gardenPackageId"] = gardenPackageId;
     _data["dateTime"] = dateTime;
     _data["roomId"] = roomId;
-    if(requests != null) {
+    if (requests != null) {
       _data["requests"] = requests;
     }
     return _data;

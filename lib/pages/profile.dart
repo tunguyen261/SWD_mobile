@@ -1,11 +1,10 @@
 import 'dart:io';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:garden_app/pages/edit_profile.dart';
 import 'package:garden_app/pages/help_page.dart';
 import 'package:garden_app/pages/room_owner.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/auth_service.dart';
@@ -14,27 +13,7 @@ import 'package:page_transition/page_transition.dart';
 class ProfilePage extends StatelessWidget {
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
   ProfilePage({Key? key, this.pickedFile}) : super(key: key);
-  void setupFirebaseMessaging(BuildContext context) {
-    messaging.requestPermission();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(message.notification?.title ?? 'New Notification'),
-          content: Text(message.notification?.body ?? 'Body'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    });
-  }
-
   Future<void> selectFile(BuildContext context) async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
@@ -67,10 +46,10 @@ class ProfilePage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
+                  backgroundImage: NetworkImage(
+                      FirebaseAuth.instance.currentUser!.photoURL!),
                 ),
                 const SizedBox(width: 16),
                 Column(
@@ -79,17 +58,19 @@ class ProfilePage extends StatelessWidget {
                     Text(
                       FirebaseAuth.instance.currentUser!.displayName!,
                       style:
-                      TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 8),
                     Text(
                       FirebaseAuth.instance.currentUser!.email!,
                       style: TextStyle(fontSize: 16),
                     ),
-                    SizedBox(height: 8,),
+                    SizedBox(
+                      height: 8,
+                    ),
                     IconButton(
                       icon: Icon(Icons.camera_alt),
-                      onPressed: ()  {
+                      onPressed: () {
                         selectFile(context);
                         if (pickedFile != null) {
                           // TODO: Save the new image file
@@ -114,7 +95,22 @@ class ProfilePage extends StatelessWidget {
                       context,
                       PageTransition(
                         type: PageTransitionType.fade,
-                        child:  EditProfilePage(),
+                        child: EditProfilePage(),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.add_chart),
+                  title: const Text('Order Info'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        child: EditProfilePage(),
                       ),
                     );
                   },
@@ -129,7 +125,7 @@ class ProfilePage extends StatelessWidget {
                       context,
                       PageTransition(
                         type: PageTransitionType.fade,
-                        child:  RoomOwnerPage(),
+                        child: RoomOwnerPage(),
                       ),
                     );
                   },
@@ -144,7 +140,7 @@ class ProfilePage extends StatelessWidget {
                       context,
                       PageTransition(
                         type: PageTransitionType.fade,
-                        child:  HelpPage(),
+                        child: HelpPage(),
                       ),
                     );
                   },
@@ -154,7 +150,23 @@ class ProfilePage extends StatelessWidget {
                   leading: const Icon(Icons.exit_to_app),
                   title: const Text('Logout'),
                   onTap: () {
-                    AuthService().signOut();
+                    AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.warning,
+                      headerAnimationLoop: false,
+                      animType: AnimType.topSlide,
+                      showCloseIcon: true,
+                      closeIcon: const Icon(Icons.close_fullscreen_outlined),
+                      title: 'Warning',
+                      desc: 'Log Out Now ? ',
+                      btnCancelOnPress: () {},
+                      onDismissCallback: (type) {
+                        debugPrint('Dialog Dismiss from callback $type');
+                      },
+                      btnOkOnPress: () {
+                        AuthService().signOut();
+                      },
+                    ).show();
                   },
                 ),
               ],

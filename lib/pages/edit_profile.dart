@@ -7,9 +7,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../models/user_model.dart';
 
-
 class EditProfilePage extends StatefulWidget {
-
   const EditProfilePage({Key? key}) : super(key: key);
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -56,8 +54,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<String> _uploadImageToFirebaseStorage() async {
-    final Reference storageReference = _storage.ref().child(
-        'profile_images/${_user.id}');
+    final Reference storageReference =
+        _storage.ref().child('profile_images/${_user.id}');
     final UploadTask uploadTask = storageReference.putFile(_image);
     final TaskSnapshot downloadUrl = await uploadTask!.whenComplete(() => {});
     final String url = await downloadUrl.ref.getDownloadURL();

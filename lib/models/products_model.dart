@@ -11,11 +11,11 @@ class ProductsModel with ChangeNotifier {
 
   ProductsModel(
       {this.id,
-        this.title,
-        this.price,
-        this.description,
-        this.category,
-        this.images});
+      this.title,
+      this.price,
+      this.description,
+      this.category,
+      this.images});
 
   ProductsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

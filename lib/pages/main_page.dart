@@ -14,13 +14,13 @@ class MainPage extends StatefulWidget {
 class _UserMainState extends State<MainPage> {
   int currentTab = 0;
   final List<Widget> screens = [
-     HomePage(),
-     CartPage(),
-     ServicePage(),
-     ProfilePage(),
+    HomePage(),
+    CartPage(),
+    ServicePage(),
+    ProfilePage(),
   ];
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen =  HomePage();
+  Widget currentScreen = HomePage();
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class _UserMainState extends State<MainPage> {
                   MaterialButton(
                     onPressed: () {
                       setState(() {
-                        currentScreen =  HomePage();
+                        currentScreen = HomePage();
                         currentTab = 0;
                       });
                     },
@@ -66,7 +66,7 @@ class _UserMainState extends State<MainPage> {
                           'Home',
                           style: TextStyle(
                               color:
-                              currentTab == 0 ? Colors.green : Colors.grey),
+                                  currentTab == 0 ? Colors.green : Colors.grey),
                         )
                       ],
                     ),
@@ -74,7 +74,7 @@ class _UserMainState extends State<MainPage> {
                   MaterialButton(
                     onPressed: () {
                       setState(() {
-                        currentScreen =  CartPage();
+                        currentScreen = CartPage();
                         currentTab = 1;
                       });
                     },
@@ -89,7 +89,7 @@ class _UserMainState extends State<MainPage> {
                           'Cart',
                           style: TextStyle(
                               color:
-                              currentTab == 1 ? Colors.green : Colors.grey),
+                                  currentTab == 1 ? Colors.green : Colors.grey),
                         )
                       ],
                     ),
@@ -118,7 +118,7 @@ class _UserMainState extends State<MainPage> {
                           'Service',
                           style: TextStyle(
                               color:
-                              currentTab == 2 ? Colors.green : Colors.grey),
+                                  currentTab == 2 ? Colors.green : Colors.grey),
                         )
                       ],
                     ),
@@ -141,7 +141,7 @@ class _UserMainState extends State<MainPage> {
                           'Profile',
                           style: TextStyle(
                               color:
-                              currentTab == 3 ? Colors.green : Colors.grey),
+                                  currentTab == 3 ? Colors.green : Colors.grey),
                         )
                       ],
                     ),

@@ -56,16 +56,15 @@ class _LoginPageState extends State<LoginPage> {
                 const Text(
                   'Welcome To LaChaGarden',
                   style: TextStyle(
-                    fontSize: 36.0,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.green
-                  ),
+                      fontSize: 36.0,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.green),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height:50.0),
+                const SizedBox(height: 50.0),
                 Image.asset('assets/images/logo1.jpg'),
-                const SizedBox(height:50.0),
+                const SizedBox(height: 50.0),
                 ElevatedButton(
                   onPressed: () {
                     AuthService().signInWithGoogle();

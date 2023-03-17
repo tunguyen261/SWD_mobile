@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:garden_app/pages/home_page.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/drop_list_model.dart';
@@ -7,8 +9,10 @@ import 'package:garden_app/services/room.dart';
 import 'package:garden_app/widgets/empty_cart.dart';
 import 'package:get/get.dart';
 import 'package:garden_app/services/product.dart';
+import 'package:page_transition/page_transition.dart';
 import '../widgets/select_drop_list.dart';
 import 'package:http/http.dart' as http;
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 final ProductController controller = Get.put(ProductController());
 final RoomController controllerRoom = Get.put(RoomController());
@@ -29,15 +33,12 @@ class _CartPageState extends State<CartPage> {
   }
 
   Widget cartList() {
-    DateTime now= DateTime.now();
+    DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd').format(now);
     int status = 1;
     return SingleChildScrollView(
       child: Column(
-        children: controller.cartProducts
-            .asMap()
-            .entries
-            .map((entry) {
+        children: controller.cartProducts.asMap().entries.map((entry) {
           int index = entry.key;
           ProductsModel product = entry.value;
           bool shouldRemove = false;
@@ -63,8 +64,7 @@ class _CartPageState extends State<CartPage> {
                     color: Colors.lightGreen,
                   ),
                   child: ClipRRect(
-                    borderRadius:
-                    const BorderRadius.all(Radius.circular(20)),
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Padding(
@@ -128,53 +128,68 @@ class _CartPageState extends State<CartPage> {
                             padding: const EdgeInsets.all(10),
                             backgroundColor: Colors.blueAccent,
                             alignment: Alignment.center),
-                        onPressed: controller.isEmptyCart ? null :
-                            ()async {
-                            print("PackageID: ${product.id}"+" RoomID: ${_selectedItem?.id}"+ " Time: ${now.toLocal().toString()}");
-                            final url = Uri.parse('https://lacha.s2tek.net/api/Garden/create');
-                            final headers = {'Content-Type': 'application/json'};
-                            final body = json.encode({
-                              "status": 1,
-                              "dateTime": formattedDate,
-                              "gardenPackageId": product.id,
-                              "roomId": _selectedItem?.id
-                            });
+                        onPressed: controller.isEmptyCart
+                            ? null
+                            : () async {
+                                print("PackageID: ${product.id}" +
+                                    " RoomID: ${_selectedItem?.id}" +
+                                    " Time: ${now.toLocal().toString()}");
+                                final url = Uri.parse(
+                                    'https://lacha.s2tek.net/api/Garden/create');
+                                final headers = {
+                                  'Content-Type': 'application/json'
+                                };
+                                final body = json.encode({
+                                  "status": 1,
+                                  "dateTime": formattedDate,
+                                  "gardenPackageId": product.id,
+                                  "roomId": _selectedItem?.id
+                                });
 
-                            final response = await http.post(url, headers: headers, body: body);
+                                final response = await http.post(url,
+                                    headers: headers, body: body);
 
-                            if (response.statusCode == 200 || response.statusCode == 201 ) {
-                              print('Post request sent successfully');
-                              AlertDialog(
-                                title: Text('Delete Success'),
-                                content: Text('Your item has been successfully deleted.'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text('OK'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
+                                if (response.statusCode == 200 ||
+                                    response.statusCode == 201) {
+                                  print('Post request sent successfully');
+                                  AwesomeDialog(
+                                    context: context,
+                                    animType: AnimType.leftSlide,
+                                    headerAnimationLoop: false,
+                                    dialogType: DialogType.success,
+                                    showCloseIcon: true,
+                                    title: 'Success Booking',
+                                    desc:
+                                        'Your Room: ${_selectedItem?.roomNumber} booking garden: ${product.title} successful',
+                                    btnOkOnPress: () {
+                                      debugPrint('OnClcik');
                                     },
-                                  ),
-                                ],
-                              );
-                              setState(() {
-                                controller.cartProducts.removeAt(index);
-                              });
-                            } else {
-                              print('Error sending post request: ${response.statusCode}');
-                              AlertDialog(
-                                title: Text('Delete Failed'),
-                                content: Text('Your item has not been deleted.'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: Text('OK'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
+                                    btnOkIcon: Icons.check_circle,
+                                    onDismissCallback: (type) {
+                                      debugPrint(
+                                          'Dialog Dissmiss from callback $type');
                                     },
-                                  ),
-                                ],
-                              );
-                            }
-                        },
+                                  ).show();
+                                  setState(() {
+                                    controller.cartProducts.removeAt(index);
+                                  });
+                                } else {
+                                  print(
+                                      'Error sending post request: ${response.statusCode}');
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.error,
+                                    animType: AnimType.rightSlide,
+                                    headerAnimationLoop: false,
+                                    title: 'Error Booking',
+                                    desc:
+                                        'Your Room: ${_selectedItem?.roomNumber} can not booking garden: ${product.title}',
+                                    btnOkOnPress: () {},
+                                    btnOkIcon: Icons.cancel,
+                                    btnOkColor: Colors.red,
+                                  ).show();
+                                }
+                              },
                         child: const Text("Booking Now"),
                       ),
                     ),
@@ -188,14 +203,25 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AppBar(
-        title: Text("My cart"),
-        backgroundColor: Colors.lightGreen,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageTransition(
+                type: PageTransitionType.fade,
+                child: const HomePage(),
+              ),
+            );
+          },
+          icon: const Icon(IconlyBold.home),
+        ),
+        title: Text('My Cart'),
+        centerTitle: true,
+        backgroundColor: Colors.green,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

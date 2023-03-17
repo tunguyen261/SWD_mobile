@@ -1,14 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:garden_app/models/garden_model.dart';
 import 'package:garden_app/models/room_model.dart';
-import 'package:garden_app/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:garden_app/consts/api_consts.dart';
 import 'package:garden_app/models/categories_model.dart';
 import 'package:garden_app/models/products_model.dart';
-//import 'package:store_app/models/users_model.dart';
 
 class APIHandler {
   static Future<List<dynamic>> getData(
@@ -61,14 +58,16 @@ class APIHandler {
   }
 
   static Future<List<CategoriesModel>> getAllCategories() async {
-    List temp = await getData(target: "categories");
+    List temp = await getData(target: "PackageType");
     return CategoriesModel.categoriesFromSnapshot(temp);
   }
+
 // lay room theo User
   static Future<List<Room>> getDataRoom({required String limit}) async {
     try {
       final customerId = await fetchCustomerId();
-      List temp = await getData(target: "Room/search/$customerId",limit: limit);
+      List temp =
+          await getData(target: "Room/search/$customerId", limit: limit);
       return Room.productsFromSnapshot(temp);
     } catch (error) {
       log("An error occurred $error");
@@ -77,14 +76,15 @@ class APIHandler {
   }
 
   static Future<String> fetchCustomerId() async {
-    String? auth= FirebaseAuth.instance.currentUser?.email;
-    final response = await http.get(Uri.parse('https://lacha.s2tek.net/api/Customer/search?name=$auth'));
+    String? auth = FirebaseAuth.instance.currentUser?.email;
+    final response = await http.get(
+        Uri.parse('https://lacha.s2tek.net/api/Customer/search?name=$auth'));
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       if (jsonResponse is List && jsonResponse.isNotEmpty) {
         final customer = jsonResponse.first;
-        final id= customer["id"].toString();
+        final id = customer["id"].toString();
         print("ID cus: ${id}");
         return id;
       }
@@ -92,8 +92,6 @@ class APIHandler {
 
     throw Exception('Failed to fetch customer ID');
   }
-
-
 
   static Future<ProductsModel> getProductById({required String id}) async {
     try {

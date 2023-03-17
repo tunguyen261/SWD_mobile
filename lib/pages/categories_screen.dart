@@ -10,7 +10,11 @@ class CategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Categories")),
+        appBar: AppBar(
+          title: Text('Category List'),
+          centerTitle: true,
+          backgroundColor: Colors.green,
+        ),
         body: FutureBuilder<List<CategoriesModel>>(
             future: APIHandler.getAllCategories(),
             builder: ((context, snapshot) {

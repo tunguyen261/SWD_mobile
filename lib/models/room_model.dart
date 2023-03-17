@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
 
-class Room with ChangeNotifier{
+class Room with ChangeNotifier {
   int? id;
   String? roomNumber;
   int? status;
   int? buildingId;
   String? customerId;
 
-  Room({this.id, this.roomNumber, this.status, this.buildingId, this.customerId});
+  Room(
+      {this.id,
+      this.roomNumber,
+      this.status,
+      this.buildingId,
+      this.customerId});
 
   Room.fromJson(Map<String, dynamic> json) {
     id = json["id"];
@@ -26,6 +31,7 @@ class Room with ChangeNotifier{
     _data["customerId"] = customerId;
     return _data;
   }
+
   static List<Room> productsFromSnapshot(List roomSnapshot) {
     return roomSnapshot.map((data) {
       return Room.fromJson(data);

@@ -44,17 +44,19 @@ class FeedsWidget extends StatelessWidget {
                         text: TextSpan(
                             text: '\$',
                             style: const TextStyle(
-                                color: Color.fromRGBO(33, 150, 243, 1)),
+                                fontSize: 20,
+                                color: Color.fromRGBO(236, 216, 0, 1.0)),
                             children: <TextSpan>[
                               TextSpan(
                                   text: "${productsModelProvider.price}",
                                   style: TextStyle(
                                       color: lightTextColor,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.w600)),
                             ]),
                       ),
                     ),
-                    const Icon(IconlyBold.heart),
+                    const Icon(IconlyBold.category),
                   ],
                 ),
               ),
@@ -81,15 +83,14 @@ class FeedsWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: const TextStyle(
-                    fontSize: 17,
+                    fontSize:20,
+                    fontStyle: FontStyle.italic,
                     //  fontFamily: 'Roboto',
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
-              SizedBox(
-                height: size.height * 0.01,
-              ),
+
             ],
           ),
         ),

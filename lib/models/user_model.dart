@@ -8,7 +8,15 @@ class UserProfile {
   String? password;
   List<dynamic>? rooms;
 
-  UserProfile({this.id, this.fullName, this.phone, this.gmail, this.gender, this.status, this.password, this.rooms});
+  UserProfile(
+      {this.id,
+      this.fullName,
+      this.phone,
+      this.gmail,
+      this.gender,
+      this.status,
+      this.password,
+      this.rooms});
 
   UserProfile.fromJson(Map<String, dynamic> json) {
     id = json["id"];
@@ -30,7 +38,7 @@ class UserProfile {
     _data["gender"] = gender;
     _data["status"] = status;
     _data["password"] = password;
-    if(rooms != null) {
+    if (rooms != null) {
       _data["rooms"] = rooms;
     }
     return _data;

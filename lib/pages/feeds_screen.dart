@@ -24,7 +24,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
 
   @override
   void didChangeDependencies() {
-     getProducts();
+    getProducts();
     _scrollController.addListener(() async {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -52,36 +52,36 @@ class _FeedsScreenState extends State<FeedsScreen> {
       appBar: AppBar(
         // elevation: 4,
         title: const Text('All Products'),
-        backgroundColor: Colors.lightGreen ,
+        backgroundColor: Colors.lightGreen,
       ),
       body: productsList.isEmpty
           ? const Center(
-        child: CircularProgressIndicator(),
-      )
+              child: CircularProgressIndicator(),
+            )
           : SingleChildScrollView(
-        controller: _scrollController,
-        child: Column(
-          children: [
-            GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: productsList.length,
-                gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 0,
-                    mainAxisSpacing: 5,
-                    childAspectRatio: 0.6),
-                itemBuilder: (ctx, index) {
-                  return ChangeNotifierProvider.value(
-                      value: productsList[index],
-                      child: const FeedsWidget());
-                }),
-            if (_isLoading)
-              const Center(child: CircularProgressIndicator()),
-          ],
-        ),
-      ),
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: productsList.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 0,
+                              mainAxisSpacing: 5,
+                              childAspectRatio: 0.6),
+                      itemBuilder: (ctx, index) {
+                        return ChangeNotifierProvider.value(
+                            value: productsList[index],
+                            child: const FeedsWidget());
+                      }),
+                  if (_isLoading)
+                    const Center(child: CircularProgressIndicator()),
+                ],
+              ),
+            ),
     );
   }
 }

@@ -18,6 +18,7 @@ Future<Album> fetchAlbum() async {
     throw Exception('Failed to load album');
   }
 }
+
 class Album {
   final int userId;
   final int id;
@@ -36,8 +37,8 @@ class Album {
       title: json['title'],
     );
   }
-
 }
+
 extension IterableExtension<T> on Iterable<T> {
   Iterable<T> distinctBy(Object Function(T e) getCompareValue) {
     var result = <T>[];
@@ -54,8 +55,7 @@ extension IterableExtension<T> on Iterable<T> {
   }
 }
 
-
-class ProductController extends GetxController{
+class ProductController extends GetxController {
   RxList<ProductsModel> cartProducts = <ProductsModel>[].obs;
   RxInt totalPrice = 0.obs;
   bool get isEmptyCart => cartProducts.isEmpty;
@@ -65,6 +65,7 @@ class ProductController extends GetxController{
       totalPrice.value += element.price!;
     }
   }
+
   void addToCart(ProductsModel product) {
     //product.quantity++;
     cartProducts.add(product);

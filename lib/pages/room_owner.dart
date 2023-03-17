@@ -9,6 +9,7 @@ import 'package:garden_app/services/api_handler.dart';
 import 'package:garden_app/widgets/room_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+
 class RoomOwnerPage extends StatefulWidget {
   const RoomOwnerPage({Key? key}) : super(key: key);
 
@@ -17,24 +18,22 @@ class RoomOwnerPage extends StatefulWidget {
 }
 
 class _RoomOwnerPageState extends State<RoomOwnerPage> {
-
-  final ScrollController _scrollController= ScrollController();
+  final ScrollController _scrollController = ScrollController();
   List<Room> roomList = [];
   int limit = 10;
-  bool _isLoading=false;
+  bool _isLoading = false;
 
-
-  Future<void> getRoomUser() async{
+  Future<void> getRoomUser() async {
     roomList = await APIHandler.getDataRoom(limit: limit.toString());
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
-  void initState(){
+  void initState() {
     getRoomUser();
     super.initState();
   }
+
   @override
   void didChangeDependencies() {
     getRoomUser();
@@ -51,42 +50,42 @@ class _RoomOwnerPageState extends State<RoomOwnerPage> {
     });
     super.didChangeDependencies();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         // elevation: 4,
         title: const Text('All Rooms'),
-        backgroundColor: Colors.lightGreen ,
+        backgroundColor: Colors.lightGreen,
       ),
       body: roomList.isEmpty
           ? const Center(
-        child: CircularProgressIndicator(),
-      )
+              child: CircularProgressIndicator(),
+            )
           : SingleChildScrollView(
-        controller: _scrollController,
-        child: Column(
-          children: [
-            GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: roomList.length,
-                gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 0,
-                    mainAxisSpacing: 5,
-                    childAspectRatio: 0.6),
-                itemBuilder: (ctx, index) {
-                  return ChangeNotifierProvider.value(
-                      value: roomList[index],
-                      child: const RoomsWidget());
-                }),
-            if (_isLoading)
-              const Center(child: CircularProgressIndicator()),
-          ],
-        ),
-      ),
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: roomList.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 0,
+                              mainAxisSpacing: 5,
+                              childAspectRatio: 0.6),
+                      itemBuilder: (ctx, index) {
+                        return ChangeNotifierProvider.value(
+                            value: roomList[index], child: const RoomsWidget());
+                      }),
+                  if (_isLoading)
+                    const Center(child: CircularProgressIndicator()),
+                ],
+              ),
+            ),
     );
   }
 }
