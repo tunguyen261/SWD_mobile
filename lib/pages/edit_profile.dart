@@ -26,23 +26,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    _getUserProfile();
+    //_getUserProfile();
   }
 
-  Future<void> _getUserProfile() async {
-    final User? user = FirebaseAuth.instance!.currentUser!;
-    final DocumentSnapshot userProfileDoc =
-
-    await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
-    setState(() {
-      _user = UserProfile(
-        uid: user.uid,
-        displayName: user.displayName!,
-        email: user.email!,
-        photoUrl: user.photoURL!
-      );
-    });
-  }
+  // Future<void> _getUserProfile() async {
+  //   final User? user = FirebaseAuth.instance!.currentUser!;
+  //   final DocumentSnapshot userProfileDoc =
+  //
+  //   await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
+  //   setState(() {
+  //     _user = UserProfile(
+  //       uid: user.uid,
+  //       displayName: user.displayName!,
+  //       email: user.email!,
+  //       photoUrl: user.photoURL!
+  //     );
+  //   });
+  // }
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -57,7 +57,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<String> _uploadImageToFirebaseStorage() async {
     final Reference storageReference = _storage.ref().child(
-        'profile_images/${_user.uid}');
+        'profile_images/${_user.id}');
     final UploadTask uploadTask = storageReference.putFile(_image);
     final TaskSnapshot downloadUrl = await uploadTask!.whenComplete(() => {});
     final String url = await downloadUrl.ref.getDownloadURL();
@@ -97,20 +97,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   //   ),
                   // ),
                   SizedBox(height: 20),
-                  Text(_user.email, style: TextStyle(fontSize: 20)),
+                  //Text(_user.email, style: TextStyle(fontSize: 20)),
                   SizedBox(height: 20),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Display Name',
-                      hintText: _user.displayName,
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        _user.displayName = value;
-                      });
-                    },
-                  ),
+                  // TextField(
+                  //   decoration: InputDecoration(
+                  //     labelText: 'Display Name',
+                  //     hintText: _user.displayName,
+                  //     border: OutlineInputBorder(),
+                  //   ),
+                  //   onChanged: (value) {
+                  //     setState(() {
+                  //       _user.displayName = value;
+                  //     });
+                  //   },
+                  // ),
                   SizedBox(height: 20),
                   MaterialButton(
                     onPressed: () => _updateUserProfile(),

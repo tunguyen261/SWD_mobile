@@ -7,4 +7,6 @@ import 'package:http/http.dart' as http;
 class RoomController extends GetxController{
   RxList<Room> room =<Room>[].obs;
 
+
+
 }

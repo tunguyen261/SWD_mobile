@@ -14,7 +14,7 @@ class AuthService {
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
 
-            print(readTokens());
+            print("TOKEN USER: ${UserCredential}");
             return const MainPage();
           } else {
             return const LoginPage() ;
@@ -22,7 +22,7 @@ class AuthService {
         });
   }
 
-  signInWithGoogle() async {
+  Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser =
         await GoogleSignIn().signIn();
@@ -36,60 +36,13 @@ class AuthService {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+
     print("TokenUS: ${googleAuth.idToken}");
-    // Once signed in, return the UserCredential
+    makeAuthServer(googleAuth.idToken.toString());
     makeAuthenticatedRequest(googleAuth.idToken.toString());
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
   final FirebaseAuth auth = FirebaseAuth.instance;
-  // Refresh the access token
-  // Future<void> refreshAccessToken() async {
-  //   User? user = auth.currentUser;
-  //
-  //   if (user != null) {
-  //     try {
-  //       final String refreshToken = user.refreshToken.toString();
-  //       final AuthCredential credential = GoogleAuthProvider.credential(
-  //         idToken: await user.getIdToken(),
-  //         accessToken: await user.getIdToken(),
-  //       );
-  //
-  //       final UserCredential userCredential =
-  //       await user.reauthenticateWithCredential(credential);
-  //       final String newAccessToken = await user.getIdToken();
-  //
-  //       // Save the new access token to storage
-  //       await saveAccessToken(newAccessToken, refreshToken);
-  //     } on FirebaseAuthException catch (e) {
-  //       if (e.code == 'user-token-expired') {
-  //         try {
-  //           await refreshAccessToken();
-  //           final String? newAccessToken = await getAccessToken();
-  //           // Retry the API request using the new access token
-  //           final response = await http.get(
-  //             Uri.parse('https://example.com/api'),
-  //             headers: {
-  //               'Authorization': 'Bearer $newAccessToken',
-  //             },
-  //           );
-  //           if (response.statusCode == 200) {
-  //
-  //             return null;
-  //           } else {
-  //             throw Exception('Failed to fetch data');
-  //           }
-  //         } catch (e) {
-  //           // Handle error refreshing the access token or retrying the API request
-  //         }
-  //       } else {
-  //         // Handle other Firebase authentication errors
-  //         print('Firebase authentication error: ${e.code}');
-  //       }
-  //     } catch (e) {
-  //       print('Error: $e');
-  //     }
-  //   }
-  // }
   Future<void> saveAccessToken(String token,String refreshToken) async {
     // Save the token to storage using your preferred storage mechanism
     final prefs = await SharedPreferences.getInstance();
@@ -113,7 +66,6 @@ class AuthService {
     return googleAuth.idToken;
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
     // return prefs.getString('access_token');
-
   }
   Future<Map<String, String>> readTokens() async {
     final prefs = await SharedPreferences.getInstance();
@@ -139,7 +91,7 @@ class AuthService {
         },
       );
       if(response.statusCode == 200){
-        print("succes");
+        print("success");
         print("${response.body}");
         return response.body;
       } else {

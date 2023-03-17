@@ -1,9 +1,14 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/room_model.dart';
+import 'package:garden_app/models/user_model.dart';
 import 'package:garden_app/services/api_handler.dart';
 import 'package:garden_app/widgets/room_widget.dart';
 import 'package:provider/provider.dart';
-
+import 'package:http/http.dart' as http;
 class RoomOwnerPage extends StatefulWidget {
   const RoomOwnerPage({Key? key}) : super(key: key);
 
@@ -18,27 +23,28 @@ class _RoomOwnerPageState extends State<RoomOwnerPage> {
   int limit = 10;
   bool _isLoading=false;
 
-  Future<void> getRooms() async{
-    roomList = await APIHandler.getAllRooms(limit: limit.toString());
-    setState(() {
 
+  Future<void> getRoomUser() async{
+    roomList = await APIHandler.getDataRoom(limit: limit.toString());
+    setState(() {
     });
   }
+
   @override
   void initState(){
-    getRooms();
+    getRoomUser();
     super.initState();
   }
   @override
   void didChangeDependencies() {
-     getRooms();
+    getRoomUser();
     _scrollController.addListener(() async {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         _isLoading = true;
         print("_isLoading $_isLoading");
         limit += 10;
-        await getRooms();
+        await getRoomUser();
         _isLoading = false;
         //print("limit $limit");
       }

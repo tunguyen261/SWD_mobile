@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:garden_app/models/garden_model.dart';
 import 'package:garden_app/models/room_model.dart';
+import 'package:garden_app/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:garden_app/consts/api_consts.dart';
 import 'package:garden_app/models/categories_model.dart';
@@ -17,13 +19,13 @@ class APIHandler {
           "api/$target",
           target == "GardenPackage"
               ? {
-            "offset": "0",
-            "limit": limit,
-          }
+                  "offset": "0",
+                  "limit": limit,
+                }
               : {});
       var response = await http.get(uri);
 
-       print("responseDB: ${jsonDecode(response.body)}");
+      print("responseDB: ${jsonDecode(response.body)}");
       var data = jsonDecode(response.body);
       List tempList = [];
       if (response.statusCode != 200) {
@@ -39,16 +41,15 @@ class APIHandler {
       throw error.toString();
     }
   }
-  static Future<List<Room>> getAllRooms({required String limit}) async{
+
+  static Future<List<Room>> getAllRooms({required String limit}) async {
     List temp = await getData(
-        target: "Room",
-        limit: limit,
+      target: "Room",
+      limit: limit,
     );
 
     return Room.productsFromSnapshot(temp);
   }
-
-
 
   static Future<List<ProductsModel>> getAllProducts(
       {required String limit}) async {
@@ -63,38 +64,36 @@ class APIHandler {
     List temp = await getData(target: "categories");
     return CategoriesModel.categoriesFromSnapshot(temp);
   }
-  Future<GardenModel> createGarden(String DateTime, String GardenPackageId,String RoomId) async{
+// lay room theo User
+  static Future<List<Room>> getDataRoom({required String limit}) async {
     try {
-      final response = await http.post(
-        Uri.parse('https://your-api.com/add-to-cart'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String , String>{
-          'DateTime': DateTime,
-          "GardenPackageId": GardenPackageId,
-          "RoomId" : RoomId
-        }),
-      );
-      if (response.statusCode == 200) {
-        // Handle success
-        print('Added to cart');
-        return GardenModel.fromJson(jsonDecode(response.body));
-      } else {
-        // Handle error
-        print('Failed to add to cart');
-        throw Exception('Failed to add to cart');
-      }
-    } catch (e) {
-      // Handle error
-      print('Failed to add to cart: $e');
-      throw Exception('Failed to add to cart');
+      final customerId = await fetchCustomerId();
+      List temp = await getData(target: "Room/search/$customerId",limit: limit);
+      return Room.productsFromSnapshot(temp);
+    } catch (error) {
+      log("An error occurred $error");
+      throw error.toString();
     }
   }
-  // static Future<List<UsersModel>> getAllUsers() async {
-  //   List temp = await getData(target: "users");
-  //   return UsersModel.usersFromSnapshot(temp);
-  // }
+
+  static Future<String> fetchCustomerId() async {
+    String? auth= FirebaseAuth.instance.currentUser?.email;
+    final response = await http.get(Uri.parse('https://lacha.s2tek.net/api/Customer/search?name=$auth'));
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      if (jsonResponse is List && jsonResponse.isNotEmpty) {
+        final customer = jsonResponse.first;
+        final id= customer["id"].toString();
+        print("ID cus: ${id}");
+        return id;
+      }
+    }
+
+    throw Exception('Failed to fetch customer ID');
+  }
+
+
 
   static Future<ProductsModel> getProductById({required String id}) async {
     try {

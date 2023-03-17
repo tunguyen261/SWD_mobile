@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/drop_list_model.dart';
 import 'package:http/http.dart' as http;
@@ -22,8 +23,26 @@ class _MyDropdownMenuState extends State<MyDropdownMenu> {
   }
 
   void _fetchDropdownItems() async {
+
+    Future<String> fetchCustomerId() async {
+      String? auth= FirebaseAuth.instance.currentUser?.email;
+      final response = await http.get(Uri.parse('https://lacha.s2tek.net/api/Customer/search?name=$auth'));
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        if (jsonResponse is List && jsonResponse.isNotEmpty) {
+          final customer = jsonResponse.first;
+          final id= customer["id"].toString();
+          print("ID cus: ${id}");
+          return id;
+        }
+      }
+
+      throw Exception('Failed to fetch customer ID');
+    }
+    final customerId = await fetchCustomerId();
     final response =
-    await http.get(Uri.parse('http://s2tek.net:7100/api/Room'));
+    await http.get(Uri.parse('http://s2tek.net:7100/api/Room/search/$customerId'));
     if (response.statusCode == 200) {
       final jsonItems = jsonDecode(response.body) as List;
       setState(() {
@@ -47,7 +66,7 @@ class _MyDropdownMenuState extends State<MyDropdownMenu> {
             border: OutlineInputBorder(),
           ),
           items: _dropdownItems
-              .take(4)
+              .take(10)
               .map(
                 (item) => DropdownMenuItem<DropdownItem>(
               value: item,
