@@ -11,7 +11,20 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Category List'),
+          title: ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return LinearGradient(
+                colors: [Colors.white, Colors.yellow.shade500,Colors.white, Colors.yellow.shade500],
+              ).createShader(bounds);
+            },
+            child: Text(
+              'Category List',
+              style: TextStyle(
+                fontSize: 25.0,
+                color: Colors.white,
+              ),
+            ),
+          ),
           centerTitle: true,
           backgroundColor: Colors.green,
         ),

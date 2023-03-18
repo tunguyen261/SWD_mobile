@@ -74,6 +74,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Profile'),
+        centerTitle: true,
+        backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
         child: Column(

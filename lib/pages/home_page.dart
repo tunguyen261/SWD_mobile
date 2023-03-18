@@ -1,6 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:garden_app/pages/profile.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:garden_app/consts/global_colors.dart';
 import 'package:garden_app/pages/categories_screen.dart';
@@ -42,7 +43,20 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
           appBar: AppBar(
             // elevation: 4,
-            title: const Text('LaChaGarden Store'),
+            title: ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return LinearGradient(
+                  colors: [Colors.white, Colors.yellow.shade500,Colors.white, Colors.yellow.shade500],
+                ).createShader(bounds);
+              },
+              child: Text(
+                'Lacha Garden',
+                style: TextStyle(
+                  fontSize: 25.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
             centerTitle: true,
             backgroundColor: Colors.green,
             leading: IconButton(
@@ -57,20 +71,20 @@ class _HomePageState extends State<HomePage> {
               },
               icon: const Icon(IconlyBold.category),
             ),
-            // actions: [
-            //   AppBarIcons(
-            //     function: () {
-            //       Navigator.push(
-            //         context,
-            //         PageTransition(
-            //           type: PageTransitionType.fade,
-            //           child: const UsersScreen(),
-            //         ),
-            //       );
-            //     },
-            //     icon: IconlyBold.user3,
-            //   ),
-            // ],
+            actions: [
+              AppBarIcons(
+                function: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.fade,
+                      child:  ProfilePage(),
+                    ),
+                  );
+                },
+                icon: IconlyBold.user3,
+              ),
+            ],
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),

@@ -32,7 +32,7 @@ class Room with ChangeNotifier {
     return _data;
   }
 
-  static List<Room> productsFromSnapshot(List roomSnapshot) {
+  static List<Room> roomsFromSnapshot(List roomSnapshot) {
     return roomSnapshot.map((data) {
       return Room.fromJson(data);
     }).toList();

@@ -7,6 +7,7 @@ import 'package:garden_app/models/categories_model.dart';
 
 class CategoryWidget extends StatelessWidget {
   const CategoryWidget({Key? key}) : super(key: key);
+
   static const img =
       "https://www.google.com.vn/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Fvector-art%2F7396756-balcony-garden-flat-with-air-conditioner-on-white-background&psig=AOvVaw0QIJ4xcq98P5TSoSNWSYQR&ust=1679120379867000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCOjcuf-o4v0CFQAAAAAdAAAAABAE";
   @override

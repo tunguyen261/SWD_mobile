@@ -34,7 +34,7 @@ class APIHandler {
       }
       return tempList;
     } catch (error) {
-      log("An error occured $error");
+      log("An error occurred1 $error");
       throw error.toString();
     }
   }
@@ -45,7 +45,7 @@ class APIHandler {
       limit: limit,
     );
 
-    return Room.productsFromSnapshot(temp);
+    return Room.roomsFromSnapshot(temp);
   }
 
   static Future<List<ProductsModel>> getAllProducts(
@@ -63,16 +63,11 @@ class APIHandler {
   }
 
 // lay room theo User
-  static Future<List<Room>> getDataRoom({required String limit}) async {
-    try {
-      final customerId = await fetchCustomerId();
-      List temp =
-          await getData(target: "Room/search/$customerId", limit: limit);
-      return Room.productsFromSnapshot(temp);
-    } catch (error) {
-      log("An error occurred $error");
-      throw error.toString();
-    }
+  static Future<List<Room>> getDataRoom() async {
+    final customerId = await fetchCustomerId();
+    print(BASE_URL+"/api/"+"Room/search/UserID?UserID=${customerId}");
+    List temp = await getData(target:"Room/search/UserID?UserID=${customerId}");
+    return Room.roomsFromSnapshot(temp);
   }
 
   static Future<String> fetchCustomerId() async {

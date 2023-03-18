@@ -42,7 +42,7 @@ class _MyDropdownMenuState extends State<MyDropdownMenu> {
     }
     final customerId = await fetchCustomerId();
     final response =
-    await http.get(Uri.parse('http://s2tek.net:7100/api/Room/search/$customerId'));
+    await http.get(Uri.parse('https://lacha.s2tek.net/api/Room/search/UserID?UserID=$customerId'));
     if (response.statusCode == 200) {
       final jsonItems = jsonDecode(response.body) as List;
       setState(() {

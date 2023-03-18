@@ -1,14 +1,8 @@
-import 'dart:convert';
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/room_model.dart';
-import 'package:garden_app/models/user_model.dart';
 import 'package:garden_app/services/api_handler.dart';
 import 'package:garden_app/widgets/room_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class RoomOwnerPage extends StatefulWidget {
   const RoomOwnerPage({Key? key}) : super(key: key);
@@ -24,8 +18,10 @@ class _RoomOwnerPageState extends State<RoomOwnerPage> {
   bool _isLoading = false;
 
   Future<void> getRoomUser() async {
-    roomList = await APIHandler.getDataRoom(limit: limit.toString());
-    setState(() {});
+    roomList = await APIHandler.getDataRoom();
+    setState(() {
+
+    });
   }
 
   @override
@@ -55,9 +51,9 @@ class _RoomOwnerPageState extends State<RoomOwnerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // elevation: 4,
-        title: const Text('All Rooms'),
-        backgroundColor: Colors.lightGreen,
+        title: Text('Room Owner'),
+        centerTitle: true,
+        backgroundColor: Colors.green,
       ),
       body: roomList.isEmpty
           ? const Center(

@@ -35,7 +35,20 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: ShaderMask(
+          shaderCallback: (Rect bounds) {
+            return LinearGradient(
+              colors: [Colors.white, Colors.yellow.shade500,Colors.white, Colors.yellow.shade500],
+            ).createShader(bounds);
+          },
+          child: Text(
+            'Profile',
+            style: TextStyle(
+              fontSize: 25.0,
+              color: Colors.white,
+            ),
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.green,
       ),
