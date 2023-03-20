@@ -91,7 +91,7 @@ class _ServicePageState extends State<ServicePage> {
                       crossAxisCount: 1,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
-                      childAspectRatio: 1.8),
+                      childAspectRatio: 1.6),
                   itemBuilder: (ctx, index) {
                     return ChangeNotifierProvider.value(
                         value: listGarden[index],

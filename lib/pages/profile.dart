@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:garden_app/pages/edit_profile.dart';
 import 'package:garden_app/pages/help_page.dart';
-import 'package:garden_app/pages/oder_info_page.dart';
+import 'package:garden_app/pages/order_info_page.dart';
 import 'package:garden_app/pages/room_owner.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';

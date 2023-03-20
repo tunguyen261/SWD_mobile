@@ -230,7 +230,7 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () async{
-                                  
+
                                 },
                                 child: const Text("History Request"),
                               ),

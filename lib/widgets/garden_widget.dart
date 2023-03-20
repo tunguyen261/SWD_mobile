@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:garden_app/models/products_model.dart';
 import 'package:page_transition/page_transition.dart';
@@ -5,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/garden_model.dart';
 import 'package:intl/intl.dart';
-
+import 'package:http/http.dart' as http;
 import '../pages/garden_detail.dart';
 
 class GardenWidget extends StatefulWidget {
@@ -18,6 +20,7 @@ class GardenWidget extends StatefulWidget {
 class _GardenWidgetState extends State<GardenWidget> {
   late GardenModel gardenModel;
   late ProductsModel productsModel;
+
   Future<void> getGardenPackID() async {}
   @override
   void initState() {
@@ -28,6 +31,29 @@ class _GardenWidgetState extends State<GardenWidget> {
   @override
   Widget build(BuildContext context) {
     final gardenModelProvider = Provider.of<GardenModel>(context);
+    String _content = '';
+    Color _textColor = Colors.black;
+    Color _borderColor = Colors.grey;
+
+    switch (gardenModel.status) {
+      case 1:
+        _content = 'Pending...';
+        _textColor = Colors.blue;
+        _borderColor = Colors.blue;
+        break;
+      case 2:
+        _content = 'Renting';
+        _textColor = Colors.green;
+        _borderColor = Colors.green;
+        break;
+      case 3:
+        _content = 'Cancel';
+        _textColor = Colors.grey;
+        _borderColor = Colors.grey;
+        break;
+      default:
+        break;
+    }
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -58,7 +84,6 @@ class _GardenWidgetState extends State<GardenWidget> {
               ),
             ),
           ),
-          const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Text(
@@ -70,6 +95,23 @@ class _GardenWidgetState extends State<GardenWidget> {
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  _content,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 10),
@@ -86,18 +128,63 @@ class _GardenWidgetState extends State<GardenWidget> {
                     showCloseIcon: true,
                     closeIcon: const Icon(Icons.close_fullscreen_outlined),
                     title: 'Warning',
-                    desc:
-                    'Dialog description here..................................................',
+                    desc: 'Are you sure to cancel this garden order?',
                     btnCancelOnPress: () {},
                     onDismissCallback: (type) {
                       debugPrint('Dialog Dismiss from callback $type');
                     },
-                    btnOkOnPress: () {},
+                    btnOkOnPress: () async {
+                      final url = Uri.parse(
+                          'https://lacha.s2tek.net/api/Garden/editStatus/${gardenModel!.id}');
+                      final headers = {'Content-Type': 'application/json'};
+                      final body = json.encode({"status": 3});
+                      final response = await http.put(url, headers: headers, body: body);
+                      if (response.statusCode == 200 || response.statusCode == 201) {
+                        print('Post request sent successfully');
+                        AwesomeDialog(
+                          context: context,
+                          animType: AnimType.leftSlide,
+                          headerAnimationLoop: false,
+                          dialogType: DialogType.success,
+                          showCloseIcon: true,
+                          title: 'Success',
+                          desc:
+                              'Your Rental Of Garden(${gardenModel!.id}) Cancel Successful',
+                          btnOkOnPress: () {
+                            debugPrint('OnClick');
+                          },
+                          btnOkIcon: Icons.check_circle,
+                          onDismissCallback: (type) {
+                            debugPrint('Dialog Dismiss from callback $type');
+                          },
+                        ).show();
+                        setState(() {
+
+                        });
+                      } else {
+                        print(
+                            'Error sending post request: ${response.statusCode}');
+                        AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.error,
+                          animType: AnimType.rightSlide,
+                          headerAnimationLoop: false,
+                          title: 'Error',
+                          desc:
+                              'Your Rental Of Garden(${gardenModel!.id}) Cancel Fail Or Already Canceled!',
+                          btnOkOnPress: () {},
+                          btnOkIcon: Icons.cancel,
+                          btnOkColor: Colors.red,
+                        ).show();
+                      };
+                    },
                   ).show();
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.yellow[700]!),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.yellow[700]!),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
@@ -112,15 +199,17 @@ class _GardenWidgetState extends State<GardenWidget> {
                   Navigator.push(
                     context,
                     PageTransition(
-
                       type: PageTransitionType.fade,
-                      child: GardenDetailPage(id: gardenModelProvider.id.toString()),
+                      child: GardenDetailPage(
+                          id: gardenModelProvider.id.toString()),
                     ),
                   );
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),

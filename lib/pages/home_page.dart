@@ -1,7 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:garden_app/pages/oder_info_page.dart';
+import 'package:garden_app/pages/order_info_page.dart';
 import 'package:garden_app/pages/profile.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:garden_app/consts/global_colors.dart';

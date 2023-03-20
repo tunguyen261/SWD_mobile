@@ -88,7 +88,6 @@ class APIHandler {
       if (jsonResponse is List && jsonResponse.isNotEmpty) {
         final customer = jsonResponse.first;
         final id = customer["id"].toString();
-        print("ID cus: ${id}");
         return id;
       }
     }
