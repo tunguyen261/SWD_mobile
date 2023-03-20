@@ -36,7 +36,7 @@ class bottomNavigation extends StatelessWidget {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.home_repair_service_outlined),
-                label: 'Service',
+                label: 'Order',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.shopping_cart),

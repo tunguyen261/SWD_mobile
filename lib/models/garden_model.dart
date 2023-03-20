@@ -1,4 +1,6 @@
-class GardenModel {
+import 'package:flutter/material.dart';
+
+class GardenModel with ChangeNotifier{
   int? id;
   int? status;
   int? gardenPackageId;
@@ -34,5 +36,10 @@ class GardenModel {
       _data["requests"] = requests;
     }
     return _data;
+  }
+  static List<GardenModel> gardenFromSnapshot(List gardenSnapshot) {
+    return gardenSnapshot.map((data) {
+      return GardenModel.fromJson(data);
+    }).toList();
   }
 }

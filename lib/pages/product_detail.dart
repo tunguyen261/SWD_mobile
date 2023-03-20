@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:garden_app/models/products_model.dart';
 import 'package:garden_app/services/api_handler.dart';
 import 'package:garden_app/services/product.dart';
+import 'package:page_transition/page_transition.dart';
 import '../consts/global_colors.dart';
+import 'cart.dart';
 
 final ProductController controller = Get.put(ProductController());
 
@@ -73,15 +75,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Text(
-                              //   ("Category: ${productsModel!.category!.name.toString()}"),
-                              //   style: const TextStyle(
-                              //     fontSize: 24.0,
-                              //     fontWeight: FontWeight.bold,
-                              //     color: Colors.lightGreen,// added background color
-                              //
-                              //   ),
-                              // ),
                               const SizedBox(
                                 height: 18,
                               ),
@@ -171,8 +164,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                  onPressed: () =>
-                                      controller.addToCart(productsModel!),
+                                  onPressed: () => {
+                                    controller.addToCart(productsModel!),
+                                    Navigator.push(
+                                      context,
+                                      PageTransition(
+                                        type: PageTransitionType.fade,
+                                        child: CartPage(),
+                                      ),
+                                    ),
+                                  },
                                   child: const Text("Add to cart"),
                                 ),
                               )

@@ -127,82 +127,81 @@ class _CartPageState extends State<CartPage> {
                             alignment: Alignment.center),
                         onPressed: controller.isEmptyCart
                             ? null
-                            : ()  {
-                          AwesomeDialog(
-                            context: context,
-                            keyboardAware: true,
-                            dismissOnBackKeyPress: false,
-                            dialogType: DialogType.warning,
-                            animType: AnimType.bottomSlide,
-                            btnCancelText: "Cancel Order",
-                            btnOkText: "Yes, I will pay",
-                            title: 'Continue to pay?',
-                            // padding: const EdgeInsets.all(5.0),
-                            desc:
-                            'Please confirm that you will pay ${product.price} Dollar to booking this garden.',
-                            btnCancelOnPress: () {},
-                            btnOkOnPress: () async {
-                              print("PackageID: ${product.id}" +
-                                  " RoomID: ${_selectedItem?.id}" +
-                                  " Time: ${now.toLocal().toString()}");
-                              final url = Uri.parse(
-                                  'https://lacha.s2tek.net/api/Garden/create');
-                              final headers = {
-                                'Content-Type': 'application/json'
-                              };
-                              final body = json.encode({
-                                "status": 1,
-                                "dateTime": formattedDate,
-                                "gardenPackageId": product.id,
-                                "roomId": _selectedItem?.id
-                              });
-
-                              final response = await http.post(url,
-                                  headers: headers, body: body);
-
-                              if (response.statusCode == 200 ||
-                                  response.statusCode == 201) {
-                                print('Post request sent successfully');
+                            : () {
                                 AwesomeDialog(
                                   context: context,
-                                  animType: AnimType.leftSlide,
-                                  headerAnimationLoop: false,
-                                  dialogType: DialogType.success,
-                                  showCloseIcon: true,
-                                  title: 'Success Booking',
+                                  keyboardAware: true,
+                                  dismissOnBackKeyPress: false,
+                                  dialogType: DialogType.warning,
+                                  animType: AnimType.bottomSlide,
+                                  btnCancelText: "Cancel Order",
+                                  btnOkText: "Yes, I will pay",
+                                  title: 'Continue to pay?',
+                                  // padding: const EdgeInsets.all(5.0),
                                   desc:
-                                  'Your Room: ${_selectedItem?.roomNumber} booking garden: ${product.title} successful',
-                                  btnOkOnPress: () {
-                                    debugPrint('OnClick');
-                                  },
-                                  btnOkIcon: Icons.check_circle,
-                                  onDismissCallback: (type) {
-                                    debugPrint(
-                                        'Dialog Dismiss from callback $type');
-                                  },
-                                ).show();
-                                setState(() {
-                                  controller.cartProducts.removeAt(index);
-                                });
-                              } else {
-                                print(
-                                    'Error sending post request: ${response.statusCode}');
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.error,
-                                  animType: AnimType.rightSlide,
-                                  headerAnimationLoop: false,
-                                  title: 'Error Booking',
-                                  desc:
-                                  'Your Room: ${_selectedItem?.roomNumber} can not booking garden: ${product.title}',
-                                  btnOkOnPress: () {},
-                                  btnOkIcon: Icons.cancel,
-                                  btnOkColor: Colors.red,
-                                ).show();
-                              }
-                            },
-                          ).show();
+                                      'Please confirm that you will pay ${product.price} Dollar to booking this garden.',
+                                  btnCancelOnPress: () {},
+                                  btnOkOnPress: () async {
+                                    print("PackageID: ${product.id}" +
+                                        " RoomID: ${_selectedItem?.id}" +
+                                        " Time: ${now.toLocal().toString()}");
+                                    final url = Uri.parse(
+                                        'https://lacha.s2tek.net/api/Garden/create');
+                                    final headers = {
+                                      'Content-Type': 'application/json'
+                                    };
+                                    final body = json.encode({
+                                      "status": 1,
+                                      "dateTime": formattedDate,
+                                      "gardenPackageId": product.id,
+                                      "roomId": _selectedItem?.id
+                                    });
 
+                                    final response = await http.post(url,
+                                        headers: headers, body: body);
+
+                                    if (response.statusCode == 200 ||
+                                        response.statusCode == 201) {
+                                      print('Post request sent successfully');
+                                      AwesomeDialog(
+                                        context: context,
+                                        animType: AnimType.leftSlide,
+                                        headerAnimationLoop: false,
+                                        dialogType: DialogType.success,
+                                        showCloseIcon: true,
+                                        title: 'Success Booking',
+                                        desc:
+                                            'Your Room: ${_selectedItem?.roomNumber} booking garden: ${product.title} successful',
+                                        btnOkOnPress: () {
+                                          debugPrint('OnClick');
+                                        },
+                                        btnOkIcon: Icons.check_circle,
+                                        onDismissCallback: (type) {
+                                          debugPrint(
+                                              'Dialog Dismiss from callback $type');
+                                        },
+                                      ).show();
+                                      setState(() {
+                                        controller.cartProducts.removeAt(index);
+                                      });
+                                    } else {
+                                      print(
+                                          'Error sending post request: ${response.statusCode}');
+                                      AwesomeDialog(
+                                        context: context,
+                                        dialogType: DialogType.error,
+                                        animType: AnimType.rightSlide,
+                                        headerAnimationLoop: false,
+                                        title: 'Error Booking',
+                                        desc:
+                                            'Your Room: ${_selectedItem?.roomNumber} can not booking garden: ${product.title}',
+                                        btnOkOnPress: () {},
+                                        btnOkIcon: Icons.cancel,
+                                        btnOkColor: Colors.red,
+                                      ).show();
+                                    }
+                                  },
+                                ).show();
                               },
                         child: const Text("Booking Now"),
                       ),
@@ -224,7 +223,12 @@ class _CartPageState extends State<CartPage> {
         title: ShaderMask(
           shaderCallback: (Rect bounds) {
             return LinearGradient(
-              colors: [Colors.white, Colors.yellow.shade500,Colors.white, Colors.yellow.shade500],
+              colors: [
+                Colors.white,
+                Colors.yellow.shade500,
+                Colors.white,
+                Colors.yellow.shade500
+              ],
             ).createShader(bounds);
           },
           child: Text(

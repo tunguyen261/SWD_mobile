@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:garden_app/pages/edit_profile.dart';
 import 'package:garden_app/pages/help_page.dart';
+import 'package:garden_app/pages/oder_info_page.dart';
 import 'package:garden_app/pages/room_owner.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,7 +39,12 @@ class ProfilePage extends StatelessWidget {
         title: ShaderMask(
           shaderCallback: (Rect bounds) {
             return LinearGradient(
-              colors: [Colors.white, Colors.yellow.shade500,Colors.white, Colors.yellow.shade500],
+              colors: [
+                Colors.white,
+                Colors.yellow.shade500,
+                Colors.white,
+                Colors.yellow.shade500
+              ],
             ).createShader(bounds);
           },
           child: Text(
@@ -123,7 +129,7 @@ class ProfilePage extends StatelessWidget {
                       context,
                       PageTransition(
                         type: PageTransitionType.fade,
-                        child: EditProfilePage(),
+                        child: OrderPage(),
                       ),
                     );
                   },

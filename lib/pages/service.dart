@@ -1,102 +1,108 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
+import 'package:provider/provider.dart';
 
-HtmlEditorController controller = HtmlEditorController();
+import '../models/garden_model.dart';
+import '../services/api_garden.dart';
+import '../widgets/garden_widget.dart';
 
-@override
-Widget build(BuildContext context) {
-  return HtmlEditor(
-    controller: controller, //required
-    htmlEditorOptions: HtmlEditorOptions(
-      hint: "Your text here...",
-      //initalText: "text content initial, if any",
-    ),
-    otherOptions: OtherOptions(
-      height: 10,
-    ),
-  );
+class ServicePage extends StatefulWidget {
+  @override
+  _ServicePageState createState() => _ServicePageState();
 }
 
-class ServicePage extends StatelessWidget {
-  String dropdownvalue = 'Apple';
+class _ServicePageState extends State<ServicePage> {
 
-  var items = [
-    'Apple',
-    'Banana',
-    'Grapes',
-    'Orange',
-    'watermelon',
-    'Pineapple'
-  ];
+
+  HtmlEditorController controller = HtmlEditorController();
+
+  @override
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoading = false;
+  List<GardenModel> listGarden = [];
+  Future<void> getGardenList() async {
+    listGarden = await GardenAPI.getAllGarden();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getGardenList();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    getGardenList();
+    _scrollController.addListener(() async {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _isLoading = true;
+        print("_isLoading $_isLoading");
+        await getGardenList();
+        _isLoading = false;
+      }
+    });
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-        appBar: AppBar(
-          title: ShaderMask(
-            shaderCallback: (Rect bounds) {
-              return LinearGradient(
-                colors: [Colors.white, Colors.yellow.shade500,Colors.white, Colors.yellow.shade500],
-              ).createShader(bounds);
-            },
-            child: Text(
-              'Service',
-              style: TextStyle(
-                fontSize: 25.0,
-                color: Colors.white,
-              ),
+      appBar: AppBar(
+        title: ShaderMask(
+          shaderCallback: (Rect bounds) {
+            return LinearGradient(
+              colors: [
+                Colors.white,
+                Colors.yellow.shade500,
+                Colors.white,
+                Colors.yellow.shade500
+              ],
+            ).createShader(bounds);
+          },
+          child: Text(
+            'Order History',
+            style: TextStyle(
+              fontSize: 25.0,
+              color: Colors.white,
             ),
           ),
-          centerTitle: true,
-          backgroundColor: Colors.green,
         ),
-        body: new Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Customer: ${FirebaseAuth.instance.currentUser!.displayName!}",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 5),
-                  DropdownButton(
-                    value: "Tokyo",
-                    items: [
-                      DropdownMenuItem(
-                          child: Text("New York"), value: "New York"),
-                      DropdownMenuItem(
-                          child: Text("New York"), value: "New York"),
-                      DropdownMenuItem(
-                          child: Text("New York"), value: "New York"),
-                      DropdownMenuItem(
-                          child: Text("New York"), value: "New York"),
-                      DropdownMenuItem(
-                        child: Text("Tokyo"),
-                        value: "Tokyo",
-                      )
-                    ],
-                    onChanged: (String? value) {},
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    "Service description:",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                  ),
-                  SizedBox(height: 5),
-                  HtmlEditor(controller: controller),
-                  ElevatedButton(
-                      onPressed: () async {
-                        String data = await controller.getText();
-                        print(data);
-                      },
-                      child: Text("Get HTML Text"))
-                ],
-              ),
-            ),
-          ],
-        ));
+        centerTitle: true,
+        backgroundColor: Colors.green,
+      ),
+      body: listGarden.isEmpty
+          ? const Center(
+        child: CircularProgressIndicator(),
+      )
+          : SingleChildScrollView(
+        controller: _scrollController,
+        child: SafeArea(
+          child: Column(
+            children: [
+              GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: listGarden.length,
+                  gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 1.8),
+                  itemBuilder: (ctx, index) {
+                    return ChangeNotifierProvider.value(
+                        value: listGarden[index],
+                        child: const GardenWidget());
+                  }),
+              if (_isLoading)
+                const Center(child: CircularProgressIndicator()),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

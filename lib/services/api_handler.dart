@@ -66,8 +66,16 @@ class APIHandler {
   static Future<List<Room>> getDataRoom() async {
     final customerId = await fetchCustomerId();
     print(BASE_URL+"/api/"+"Room/search/UserID?UserID=${customerId}");
-    List temp = await getData(target:"Room/search/UserID?UserID=${customerId}");
-    return Room.roomsFromSnapshot(temp);
+    var response = await http.get(Uri.parse("https://lacha.s2tek.net/api/Room/search/UserID?UserID=$customerId"));
+    List tempList = [];
+    var data = jsonDecode(response.body);
+    if (response.statusCode != 200) {
+      throw data["message"];
+    }
+    for (var v in data) {
+      tempList.add(v);
+    }
+    return Room.roomsFromSnapshot(tempList);
   }
 
   static Future<String> fetchCustomerId() async {
@@ -103,7 +111,7 @@ class APIHandler {
       }
       return ProductsModel.fromJson(data);
     } catch (error) {
-      log("an error occured while getting product info $error");
+      log("an error occurred while getting product info $error");
       throw error.toString();
     }
   }
