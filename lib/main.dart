@@ -56,7 +56,7 @@ Future<void> main() async {
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
-              icon: android?.smallIcon,
+              icon: android.smallIcon,
               // other properties...
             ),
           ));

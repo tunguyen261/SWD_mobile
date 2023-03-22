@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:garden_app/pages/request_history.dart';
 import 'package:garden_app/services/api_garden.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:intl/intl.dart';
@@ -21,9 +22,11 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
   bool isError = false;
   String errorStr = "";
   HtmlEditorController controller = HtmlEditorController();
+
   Future<void> getGardenInfo() async {
     try {
       gardenDetailModel = await GardenAPI.getGardenById(id: widget.id);
+
     } catch (error) {
       isError = true;
       errorStr = error.toString();
@@ -57,7 +60,7 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
       child: isError
           ? Center(
               child: Text(
-                "An error occured $errorStr",
+                "An error occurred $errorStr",
                 style:
                     const TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
               ),
@@ -127,14 +130,6 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Name Garden: ${gardenDetailModel!.gardenPackage!.namePack.toString()}",
-                              textAlign: TextAlign.start,
-                              style: titleStyle,
-                            ),
-                            const SizedBox(
-                              height: 18,
-                            ),
                             Text(
                                 'Room Number: ${gardenDetailModel!.room!.roomNumber}',
                                 style: titleStyle),
@@ -230,13 +225,18 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: () async{
-
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => RequestHistory(id: ),
+                                  //   ),
+                                  // );
                                 },
                                 child: const Text("History Request"),
                               ),
                             ),
                             const SizedBox(
-                              height: 90,
+                              height: 150,
                             ),
                           ],
                         ),

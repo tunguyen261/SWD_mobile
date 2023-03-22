@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:garden_app/pages/login_register_page.dart';
 import 'package:garden_app/pages/main_page.dart';
@@ -58,10 +57,10 @@ class AuthService {
         await googleUser!.authentication;
 
     // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
+    // final credential = GoogleAuthProvider.credential(
+    //   accessToken: googleAuth.accessToken,
+    //   idToken: googleAuth.idToken,
+    // );
     return googleAuth.idToken;
     // final SharedPreferences prefs = await SharedPreferences.getInstance();
     // return prefs.getString('access_token');

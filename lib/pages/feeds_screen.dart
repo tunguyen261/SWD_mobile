@@ -52,7 +52,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
       appBar: AppBar(
         // elevation: 4,
         title: const Text('All Products'),
-        backgroundColor: Colors.lightGreen,
+        backgroundColor: Colors.green,
       ),
       body: productsList.isEmpty
           ? const Center(

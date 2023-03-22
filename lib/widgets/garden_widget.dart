@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:garden_app/models/products_model.dart';
+import 'package:garden_app/pages/request_history.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class _GardenWidgetState extends State<GardenWidget> {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(40),
+        borderRadius: BorderRadius.circular(85),
         gradient: LinearGradient(
           colors: [
             Colors.green[400]!,
@@ -70,24 +71,11 @@ class _GardenWidgetState extends State<GardenWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 15),
+          const SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.fromLTRB(31.0, 20.0, 0.0, 0.0),
             child: Text(
               "Order ID Number: ${gardenModel.id.toString()}",
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              "Order Date: ${DateFormat('yyyy-MM-dd').format(DateTime.parse(gardenModel.dateTime!))}",
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
               style: const TextStyle(
@@ -101,8 +89,29 @@ class _GardenWidgetState extends State<GardenWidget> {
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    "Order Date: ${DateFormat('yyyy-MM-dd').format(DateTime.parse(gardenModel.dateTime!))}",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Text(
+                  "||",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 Text(
                   _content,
                   style: const TextStyle(
@@ -135,11 +144,13 @@ class _GardenWidgetState extends State<GardenWidget> {
                     },
                     btnOkOnPress: () async {
                       final url = Uri.parse(
-                          'https://lacha.s2tek.net/api/Garden/editStatus/${gardenModel!.id}');
+                          'https://lacha.s2tek.net/api/Garden/editStatus/${gardenModel.id}');
                       final headers = {'Content-Type': 'application/json'};
                       final body = json.encode({"status": 3});
-                      final response = await http.put(url, headers: headers, body: body);
-                      if (response.statusCode == 200 || response.statusCode == 201) {
+                      final response =
+                          await http.put(url, headers: headers, body: body);
+                      if (response.statusCode == 200 ||
+                          response.statusCode == 201) {
                         print('Post request sent successfully');
                         AwesomeDialog(
                           context: context,
@@ -149,7 +160,7 @@ class _GardenWidgetState extends State<GardenWidget> {
                           showCloseIcon: true,
                           title: 'Success',
                           desc:
-                              'Your Rental Of Garden(${gardenModel!.id}) Cancel Successful',
+                              'Your Rental Of Garden(${gardenModel.id}) Cancel Successful',
                           btnOkOnPress: () {
                             debugPrint('OnClick');
                           },
@@ -158,9 +169,7 @@ class _GardenWidgetState extends State<GardenWidget> {
                             debugPrint('Dialog Dismiss from callback $type');
                           },
                         ).show();
-                        setState(() {
-
-                        });
+                        setState(() {});
                       } else {
                         print(
                             'Error sending post request: ${response.statusCode}');
@@ -171,12 +180,13 @@ class _GardenWidgetState extends State<GardenWidget> {
                           headerAnimationLoop: false,
                           title: 'Error',
                           desc:
-                              'Your Rental Of Garden(${gardenModel!.id}) Cancel Fail Or Already Canceled!',
+                              'Your Rental Of Garden(${gardenModel.id}) Cancel Fail Or Already Canceled!',
                           btnOkOnPress: () {},
                           btnOkIcon: Icons.cancel,
                           btnOkColor: Colors.red,
                         ).show();
-                      };
+                      }
+                      ;
                     },
                   ).show();
                 },
@@ -193,7 +203,7 @@ class _GardenWidgetState extends State<GardenWidget> {
                 ),
                 child: Text('Cancel Order'),
               ),
-              SizedBox(width: 40),
+              SizedBox(width: 15),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -202,6 +212,31 @@ class _GardenWidgetState extends State<GardenWidget> {
                       type: PageTransitionType.fade,
                       child: GardenDetailPage(
                           id: gardenModelProvider.id.toString()),
+                    ),
+                  );
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green[400]!),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                  ),
+                ),
+                child: Text('Detail Order'),
+              ),
+              SizedBox(width: 15),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.fade,
+                      child:
+                          RequestHistory(id: gardenModelProvider.id.toString()),
                     ),
                   );
                 },
@@ -216,7 +251,7 @@ class _GardenWidgetState extends State<GardenWidget> {
                     ),
                   ),
                 ),
-                child: Text('Detail Order'),
+                child: Text('Request List'),
               ),
             ],
           ),

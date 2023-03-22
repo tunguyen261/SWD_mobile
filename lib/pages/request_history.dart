@@ -1,51 +1,55 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:provider/provider.dart';
 
-import '../models/garden_model.dart';
+import '../models/request_model.dart';
 import '../services/api_garden.dart';
-import '../widgets/garden_widget.dart';
+import '../widgets/RequestWidget.dart';
 
-class ServicePage extends StatefulWidget {
+class RequestHistory extends StatefulWidget {
+  const RequestHistory({Key? key, required this.id}) : super(key: key);
+  final String id;
   @override
-  _ServicePageState createState() => _ServicePageState();
+  State<RequestHistory> createState() => _RequestHistoryState();
 }
 
-class _ServicePageState extends State<ServicePage> {
-
-
-  HtmlEditorController controller = HtmlEditorController();
-
+class _RequestHistoryState extends State<RequestHistory> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
-  List<GardenModel> listGarden = [];
-  Future<void> getGardenList() async {
-    listGarden = await GardenAPI.getAllGarden();
+  List<RequestModel> listRequestModel =[];
+  bool isError = false;
+  String errorStr = "";
+  Future<void> getRequestInfo() async{
+    try{
+      print(widget.id);
+      listRequestModel = await GardenAPI.getGardenRequestById(id: widget.id);
+    }catch (error) {
+      isError = true;
+      errorStr = error.toString();
+      log("error $error");
+    }
     setState(() {});
   }
-
   @override
   void initState() {
-    getGardenList();
+    getRequestInfo();
     super.initState();
   }
-
   @override
   void didChangeDependencies() {
-    getGardenList();
+    getRequestInfo();
     _scrollController.addListener(() async {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         _isLoading = true;
         print("_isLoading $_isLoading");
-        await getGardenList();
+        await getRequestInfo();
         _isLoading = false;
       }
     });
     super.didChangeDependencies();
   }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -61,7 +65,7 @@ class _ServicePageState extends State<ServicePage> {
             ).createShader(bounds);
           },
           child: Text(
-            'Order History',
+            'Request History',
             style: TextStyle(
               fontSize: 25.0,
               color: Colors.white,
@@ -71,7 +75,7 @@ class _ServicePageState extends State<ServicePage> {
         centerTitle: true,
         backgroundColor: Colors.green,
       ),
-      body: listGarden.isEmpty
+      body: listRequestModel.isEmpty
           ? const Center(
         child: CircularProgressIndicator(),
       )
@@ -83,7 +87,7 @@ class _ServicePageState extends State<ServicePage> {
               GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: listGarden.length,
+                  itemCount: listRequestModel.length,
                   gridDelegate:
                   const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1,
@@ -92,8 +96,8 @@ class _ServicePageState extends State<ServicePage> {
                       childAspectRatio: 1.6),
                   itemBuilder: (ctx, index) {
                     return ChangeNotifierProvider.value(
-                        value: listGarden[index],
-                        child: const GardenWidget());
+                        value: listRequestModel[index],
+                        child: const RequestWidget());
                   }),
               if (_isLoading)
                 const Center(child: CircularProgressIndicator()),

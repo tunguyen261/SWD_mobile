@@ -114,4 +114,23 @@ class APIHandler {
       throw error.toString();
     }
   }
+  static Future<ProductsModel> getProductSearch({required String search}) async {
+    try {
+      var uri = Uri.https(
+        BASE_URL,
+        "api/GardenPackage/search?name=$search",
+      );
+      var response = await http.get(uri);
+
+      // print("response ${jsonDecode(response.body)}");
+      var data = jsonDecode(response.body);
+      if (response.statusCode != 200) {
+        throw data["message"];
+      }
+      return ProductsModel.fromJson(data);
+    } catch (error) {
+      log("an error occurred while getting product info $error");
+      throw error.toString();
+    }
+  }
 }

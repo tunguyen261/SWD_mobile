@@ -57,7 +57,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final Reference storageReference =
         _storage.ref().child('profile_images/${_user.id}');
     final UploadTask uploadTask = storageReference.putFile(_image);
-    final TaskSnapshot downloadUrl = await uploadTask!.whenComplete(() => {});
+    final TaskSnapshot downloadUrl = await uploadTask.whenComplete(() => {});
     final String url = await downloadUrl.ref.getDownloadURL();
     return url;
   }
