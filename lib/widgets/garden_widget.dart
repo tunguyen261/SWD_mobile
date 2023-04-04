@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:garden_app/models/garden_model.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+
 import '../pages/garden_detail.dart';
 
 class GardenWidget extends StatefulWidget {
@@ -73,7 +74,7 @@ class _GardenWidgetState extends State<GardenWidget> {
         children: [
           const SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.fromLTRB(31.0, 20.0, 0.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(25.0, 20.0, 0.0, 0.0),
             child: Text(
               "Order ID Number: ${gardenModel.id.toString()}",
               overflow: TextOverflow.ellipsis,

@@ -22,11 +22,10 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
   bool isError = false;
   String errorStr = "";
   HtmlEditorController controller = HtmlEditorController();
-
+  TextEditingController _textFieldController = TextEditingController();
   Future<void> getGardenInfo() async {
     try {
       gardenDetailModel = await GardenAPI.getGardenById(id: widget.id);
-
     } catch (error) {
       isError = true;
       errorStr = error.toString();
@@ -92,7 +91,7 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                                 Flexible(
                                   flex: 4,
                                   child: Text(
-                                    "Name Garden: ${gardenDetailModel!.gardenPackage!.namePack.toString()}",
+                                    'ID Order Number: ${gardenDetailModel!.id}',
                                     textAlign: TextAlign.start,
                                     style: titleStyle,
                                   ),
@@ -103,7 +102,7 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                                     text: TextSpan(
                                         text: '\$',
                                         style: const TextStyle(
-                                            fontSize: 22,
+                                            fontSize: 24,
                                             color: Color.fromRGBO(
                                                 241, 190, 23, 1.0)),
                                         children: <TextSpan>[
@@ -137,10 +136,16 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                               height: 18,
                             ),
                             Text(
+                                "Name Garden: ${gardenDetailModel!.gardenPackage!.namePack.toString()}",
+                                style: titleStyle),
+                            const SizedBox(
+                              height: 18,
+                            ),
+                            Text(
                               "Date Booking: ${DateFormat('yyyy-MM-dd').format(DateTime.parse(gardenDetailModel!.dateTime.toString()))}",
                               textAlign: TextAlign.start,
                               style: const TextStyle(
-                                fontSize: 22,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
@@ -148,16 +153,34 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                             const SizedBox(
                               height: 18,
                             ),
-                            HtmlEditor(
-                              controller: controller,
-                              htmlEditorOptions: HtmlEditorOptions(
-                                hint:
-                                    "Type Your Request Here For Us To Help You ...",
-                                characterLimit: 1000,
+                            // HtmlEditor(
+                            //   controller: controller,
+                            //   htmlEditorOptions: HtmlEditorOptions(
+                            //     hint:
+                            //         "Type Your Request Here For Us To Help You ...",
+                            //     characterLimit: 1000,
+                            //   ),
+                            //   otherOptions: OtherOptions(
+                            //     height: 250,
+                            //   ),
+                            // ),
+                            TextField(
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.fromLTRB(15, 15, 0, 100),
+                                hintText: "Input your request here...",
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
                               ),
-                              otherOptions: OtherOptions(
-                                height: 250,
-                              ),
+                              controller: _textFieldController,
+                              // Other parameters ...
                             ),
                             const SizedBox(
                               height: 10,
@@ -171,10 +194,12 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                                   final headers = {
                                     'Content-Type': 'application/json'
                                   };
-                                  String data = await controller.getText();
+                                  String textFieldValue =
+                                      await _textFieldController.text;
+                                  //String data = await controller.getText();
                                   final body = json.encode({
                                     "status": 1,
-                                    "description": data,
+                                    "description": textFieldValue,
                                     "gardenId": gardenDetailModel!.id
                                   });
 
@@ -191,7 +216,7 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                                       showCloseIcon: true,
                                       title: 'Success Request',
                                       desc:
-                                      'Your Request of Room(${gardenDetailModel!.room!.roomNumber}) create successful',
+                                          'Your Request of Room(${gardenDetailModel!.room!.roomNumber}) create successful',
                                       btnOkOnPress: () {
                                         debugPrint('OnClick');
                                       },
@@ -211,7 +236,7 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                                       headerAnimationLoop: false,
                                       title: 'Error Request',
                                       desc:
-                                      'Your Request of Room(${gardenDetailModel!.room!.roomNumber}) create failed',
+                                          'Your Request of Room(${gardenDetailModel!.room!.roomNumber}) create failed',
                                       btnOkOnPress: () {},
                                       btnOkIcon: Icons.cancel,
                                       btnOkColor: Colors.red,
@@ -221,22 +246,8 @@ class _GardenDetailPageState extends State<GardenDetailPage> {
                                 child: const Text("Create Request"),
                               ),
                             ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () async{
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => RequestHistory(id: ),
-                                  //   ),
-                                  // );
-                                },
-                                child: const Text("History Request"),
-                              ),
-                            ),
                             const SizedBox(
-                              height: 150,
+                              height: 275,
                             ),
                           ],
                         ),

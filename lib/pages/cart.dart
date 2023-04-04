@@ -151,7 +151,6 @@ class _CartPageState extends State<CartPage> {
                                       'Content-Type': 'application/json'
                                     };
                                     final body = json.encode({
-                                      "status": 1,
                                       "dateTime": formattedDate,
                                       "gardenPackageId": product.id,
                                       "roomId": _selectedItem?.id

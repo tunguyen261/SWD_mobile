@@ -1,7 +1,11 @@
+import 'dart:convert';
+
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../consts/global_colors.dart';
 import '../models/request_model.dart';
+import 'package:http/http.dart' as http;
 
 class RequestWidget extends StatefulWidget {
   const RequestWidget({Key? key}) : super(key: key);
@@ -17,16 +21,16 @@ class _RequestWidgetState extends State<RequestWidget> {
 
     final requestModelProvider = Provider.of<RequestModel>(context);
     Size size = MediaQuery.of(context).size;
-    String _content = '';
+    String _content = 'Not Found';
     switch (requestModelProvider.status) {
       case 1:
         _content = 'Pending...';
         break;
       case 2:
-        _content = 'Renting';
+        _content = 'Processing...';
         break;
       case 3:
-        _content = 'Cancel';
+        _content = 'Complete';
         break;
       default:
         break;
@@ -100,7 +104,63 @@ class _RequestWidgetState extends State<RequestWidget> {
                   ),
                 ),
               ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final url = Uri.parse(
+                        'https://lacha.s2tek.net/api/Request/editStatus/${requestModelProvider.id}');
+                    final headers = {
+                      'Content-Type': 'application/json'
+                    };
+                    String id = requestModelProvider.id.toString();
+                    final body = json.encode({
+                      "status": 3,
+                    });
 
+                    final response = await http.put(url,
+                        headers: headers, body: body);
+                    if (response.statusCode == 200 ||
+                        response.statusCode == 201) {
+                      AwesomeDialog(
+                        context: context,
+                        animType: AnimType.leftSlide,
+                        headerAnimationLoop: false,
+                        dialogType: DialogType.success,
+                        showCloseIcon: true,
+                        title: 'Success Request',
+                        desc:
+                        'Your Request of Room(${requestModelProvider.id}) mark complete successful',
+                        btnOkOnPress: () {
+                          debugPrint('OnClick');
+                        },
+                        btnOkIcon: Icons.check_circle,
+                        onDismissCallback: (type) {
+                          debugPrint(
+                              'Dialog Dismiss from callback $type');
+                        },
+                      ).show();
+                    } else {
+                      print(
+                          'Error sending post request: ${response.statusCode}');
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.error,
+                        animType: AnimType.rightSlide,
+                        headerAnimationLoop: false,
+                        title: 'Error Request',
+                        desc:
+                        'Your Request of Room(${requestModelProvider.id}) mark complete failed',
+                        btnOkOnPress: () {},
+                        btnOkIcon: Icons.cancel,
+                        btnOkColor: Colors.red,
+                      ).show();
+                    }
+                  },
+                  child: const Text("Mark As Complete Request"),
+                ),
+              ),
             ],
           ),
         ),

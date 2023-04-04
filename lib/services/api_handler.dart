@@ -80,8 +80,10 @@ class APIHandler {
 
   static Future<String> fetchCustomerId() async {
     String? auth = FirebaseAuth.instance.currentUser?.email;
+    //String? authName = FirebaseAuth.instance.currentUser?.displayName;
+    String authWithoutDomain = auth!.replaceAll('@gmail.com', '');
     final response = await http.get(
-        Uri.parse('https://lacha.s2tek.net/api/Customer/search?name=$auth'));
+        Uri.parse('https://lacha.s2tek.net/api/Customer/search?name=$authWithoutDomain'));
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
